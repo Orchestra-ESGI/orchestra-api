@@ -6,12 +6,11 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var activityRouter = require('./routes/activity');
-var categoryRouter = require('./routes/category');
-var placeRouter = require('./routes/place');
-var notationRouter = require('./routes/notation');
 var favorisRouter = require('./routes/favoris');
-var disponibilityRouter = require('./routes/disponibility');
+
+const swaggerUi = require('swagger-ui-express'),
+  swaggerDocument = require('./swagger.json');
+
 var app = express();
 
 // view engine setup
@@ -26,12 +25,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/activity', activityRouter);
-app.use('/category', categoryRouter);
-app.use('/place', placeRouter);
-app.use('/notation', notationRouter);
 app.use('/favoris', favorisRouter);
-app.use('/disponibility', disponibilityRouter);
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/public/images', express.static('public/images'));
 
 // catch 404 and forward to error handler
