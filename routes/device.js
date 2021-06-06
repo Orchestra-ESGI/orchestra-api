@@ -117,6 +117,7 @@ router.post('/add', async function(req, res, next) {
     }
 
     console.log(objectConf);
+    console.log(JSON.stringify(conf));
 
     const rawConf = fs.readFileSync('mockDevice.json');
     var conf = JSON.parse(rawConf);
