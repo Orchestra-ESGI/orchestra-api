@@ -47,12 +47,14 @@ function convertXyColorToHex(x, y, bri) {
     return rgb;             
 }
 
-function createTimer(devices, res) {
-    return setTimeout(() => {
+function createTimer(devices, res, client) {
+    return setTimeout(async () => {
         for (let i in devices) {
             devices[i]["is_reachable"] = devices[i]['is_complete'];
             delete devices[i]['is_complete'];
         }
+
+        await client.end()
 
         res.send({
             devices: devices,
@@ -62,10 +64,20 @@ function createTimer(devices, res) {
     }, 3000);
 }
 
+async function mqttFactoryReset(client) {
+    await client.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 module.exports = {
     PORT,
     BASEAPPURL,
     createMqttClient,
     convertXyColorToHex,
-    createTimer
+    createTimer,
+    mqttFactoryReset,
+    sleep
 };

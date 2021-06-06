@@ -1,8 +1,15 @@
 const fs = require('fs');
+const yaml = require('yaml');
 var express = require('express');
 var router = express.Router();
 
-const { createMqttClient, convertXyColorToHex, createTimer } = require('../config');
+const {
+    createMqttClient,
+    convertXyColorToHex,
+    createTimer,
+    mqttFactoryReset,
+    sleep
+} = require('../config');
 
 router.get('/all', async function(req, res, next) {
 
@@ -23,7 +30,7 @@ router.get('/all', async function(req, res, next) {
     var timer = createTimer(mockDevices, res);
 
     //Called twice dunno why ???????
-    client.on('message', (topic, message) => {
+    client.on('message', async (topic, message) => {
         clearTimeout(timer);
         let parsedMessage = JSON.parse(message.toString());
         let friendlyName = topic.split('/')[1];
@@ -40,7 +47,7 @@ router.get('/all', async function(req, res, next) {
         }
 
         mockDevices[index].is_complete = true;
-        timer = createTimer(mockDevices, res);
+        timer = createTimer(mockDevices, res, client);
     });
 });
 
@@ -52,15 +59,74 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
+router.post('/add', async function(req, res, next) {
+
+    let client = await createMqttClient();
+    var count = 0;
+
+    const file = fs.readFileSync('/opt/zigbee2mqtt/configuration.yaml', 'utf8')
+    let parsedFile = yaml.parse(file);
+    let oldFriendlyNames = Object.keys(parsedFile.devices);
+
+    if (req.body.reset) {
+        await mqttFactoryReset(client);
+        await sleep(3000);
+    }
+
+    let newFile = fs.readFileSync('/opt/zigbee2mqtt/configuration.yaml', 'utf8');
+    let newParsedFile = yaml.parse(newFile);
+    let newFriendlyNames = Object.keys(newParsedFile.devices);
+
+    while(oldFriendlyNames.length === newFriendlyNames.length && count <= 5) {
+        let newFile = fs.readFileSync('/opt/zigbee2mqtt/configuration.yaml', 'utf8');
+        let newParsedFile = yaml.parse(newFile);
+        newFriendlyNames = Object.keys(newParsedFile.devices);
+        count += 1
+        await sleep(2000);
+    }
+
+    if (count >= 5) {
+        res.send({
+            error: "Timed out, searching exceeded limit"
+        });
+        return;
+    }
+
+    var friendlyName = ""
+
+    for (let i in newFriendlyNames) {
+        if(!oldFriendlyNames.includes(newFriendlyNames[i])) {
+            friendlyName = newFriendlyNames[i];
+        }
+    }
+
+    let objectConf = {
+        friendly_name: friendlyName,
+        ...req.body
+    }
+
+    const rawConf = fs.readFileSync('mockDevice.json');
+    var conf = JSON.parse(rawConf);
+
+    conf.push(objectConf);
+
+    fs.writeFileSync('mockDevice.json', JSON.stringify(conf));
+
+    await client.end();
+
+    res.send({
+        error: null
+    });
+});
+
 router.post('/action', async function(req, res, next) {
 
     let client = await createMqttClient();
-
-    console.log(req.body.friendly_name);
-    console.log(req.body.actions);
+    
     //await client.subscribe("zigbee2mqtt/" + req.body.friendly_name);
     await client.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
 
+    await client.end();
     res.send({
         error: null
     });
