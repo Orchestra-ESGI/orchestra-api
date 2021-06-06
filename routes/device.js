@@ -27,7 +27,7 @@ router.get('/all', async function(req, res, next) {
         await client.publish("zigbee2mqtt/" + mockDevices[i].friendly_name + "/get", JSON.stringify({ "state": "", "color": { "hex": "" } }));
     }
 
-    var timer = createTimer(mockDevices, res);
+    var timer = createTimer(mockDevices, res, client);
 
     //Called twice dunno why ???????
     client.on('message', async (topic, message) => {
@@ -122,7 +122,7 @@ router.post('/add', async function(req, res, next) {
 router.post('/action', async function(req, res, next) {
 
     let client = await createMqttClient();
-    
+
     //await client.subscribe("zigbee2mqtt/" + req.body.friendly_name);
     await client.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
 
