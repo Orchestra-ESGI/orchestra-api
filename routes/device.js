@@ -52,7 +52,7 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
-router.get('/action', async function(req, res, next) {
+router.post('/action', async function(req, res, next) {
 
     console.log(req.body.friendly_name);
     console.log(req.body.actions);
