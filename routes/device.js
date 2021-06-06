@@ -96,19 +96,16 @@ router.post('/add', async function(req, res, next) {
         return;
     }
 
-    var friendlyName = ""
+    var index = -1
 
-    console.log("newFriendlyNames: ", newFriendlyNames);
     for (let i in newFriendlyNames) {
-        console.log("in FOR", newFriendlyNames[i]);
         if(!oldFriendlyNames.includes(newFriendlyNames[i])) {
-            friendlyName = newFriendlyNames[i];
-            console.log("in IF FOR", friendlyName);
+            index = i;
         }
     }
 
     let objectConf = {
-        friendly_name: friendlyName,
+        friendly_name: newFriendlyNames[index],
         ...req.body
     }
 
