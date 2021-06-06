@@ -102,11 +102,17 @@ router.post('/add', async function(req, res, next) {
     }
 
     let objectConf = {
-        friendly_name: JSON.stringify(newFriendlyNames[index])
+        friendly_name: newFriendlyNames[index],
+        ...JSON.stringify(req.body)
     }
 
+    let testObj = {
+        ...req.body,
+        friendly_name: newFriendlyNames[index]
+    }
+    
     console.log(objectConf);
-    console.log(JSON.stringify(objectConf));
+    console.log(testObj);
 
     const rawConf = fs.readFileSync('mockDevice.json');
     var conf = JSON.parse(rawConf);
