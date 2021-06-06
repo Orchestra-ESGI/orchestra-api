@@ -72,9 +72,6 @@ router.post('/add', async function(req, res, next) {
     var newParsedFile = yaml.parse(newFile);
     var newFriendlyNames = Object.keys(newParsedFile.devices);
 
-    console.log("old", oldFriendlyNames);
-    console.log("new", newFriendlyNames);
-
     if (req.body.reset) {
         await mqttFactoryReset(client);
         await sleep(3000);
@@ -104,20 +101,12 @@ router.post('/add', async function(req, res, next) {
         }
     }
 
-    let testConf = {
-        friendly_name: newFriendlyNames[index],
-        test: "ici"
-    }
-
-    console.log(testConf);
-
     let objectConf = {
-        friendly_name: JSON.stringify(newFriendlyNames[index]),
-        ...req.body
+        friendly_name: JSON.stringify(newFriendlyNames[index])
     }
 
     console.log(objectConf);
-    console.log(JSON.stringify(conf));
+    console.log(JSON.stringify(objectConf));
 
     const rawConf = fs.readFileSync('mockDevice.json');
     var conf = JSON.parse(rawConf);
