@@ -104,6 +104,13 @@ router.post('/add', async function(req, res, next) {
         }
     }
 
+    let testConf = {
+        friendly_name: newFriendlyNames[index],
+        test: "ici"
+    }
+
+    console.log(testConf);
+
     let objectConf = {
         friendly_name: JSON.stringify(newFriendlyNames[index]),
         ...req.body
