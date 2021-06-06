@@ -52,4 +52,16 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
+router.get('/action', async function(req, res, next) {
+
+    console.log(req.body.friendly_name);
+    console.log(req.body.actions);
+    //await client.subscribe("zigbee2mqtt/" + req.body.friendly_name);
+    await client.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
+
+    res.send({
+        error: null
+    });
+});
+
 module.exports = router;
