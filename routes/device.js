@@ -98,9 +98,12 @@ router.post('/add', async function(req, res, next) {
 
     var friendlyName = ""
 
+    console.log("newFriendlyNames: ", newFriendlyNames);
     for (let i in newFriendlyNames) {
+        console.log("in FOR", newFriendlyNames[i]);
         if(!oldFriendlyNames.includes(newFriendlyNames[i])) {
             friendlyName = newFriendlyNames[i];
+            console.log("in IF FOR", friendlyName);
         }
     }
 
@@ -108,6 +111,8 @@ router.post('/add', async function(req, res, next) {
         friendly_name: friendlyName,
         ...req.body
     }
+
+    console.log(objectConf);
 
     const rawConf = fs.readFileSync('mockDevice.json');
     var conf = JSON.parse(rawConf);
