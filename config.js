@@ -65,7 +65,6 @@ function createTimer(devices, res, client) {
 }
 
 async function mqttFactoryReset(client) {
-    console.log
     await client.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
 }
 

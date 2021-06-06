@@ -37,10 +37,14 @@ router.get('/all', async function(req, res, next) {
         let index = mockDevices.findIndex(device => device.friendly_name === friendlyName);
         if (mockDevices[index]["is_complete"] === false) {
             switch(mockDevices[index].type) {
-                case 'lightbulb': 
+                case 'lightbulb':
                     mockDevices[index].actions.state = parsedMessage.state;
                     mockDevices[index].actions.brightness["current_state"] = parsedMessage.brightness;
-                    mockDevices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
+                    if (parsedMessage.color) {
+                        mockDevices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
+                    } else {
+                        mockDevices[index].actions.color.hex = ""
+                    }
                     mockDevices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                     break;
             }
