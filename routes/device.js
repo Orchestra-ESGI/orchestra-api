@@ -78,8 +78,8 @@ router.post('/add', async function(req, res, next) {
     let newFriendlyNames = Object.keys(newParsedFile.devices);
 
     while(oldFriendlyNames.length === newFriendlyNames.length && count <= 5) {
-        let newFile = fs.readFileSync('../opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
-        let newParsedFile = yaml.parse(newFile);
+        newFile = fs.readFileSync('../opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
+        newParsedFile = yaml.parse(newFile);
         newFriendlyNames = Object.keys(newParsedFile.devices);
         count += 1
         await sleep(2000);
