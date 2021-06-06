@@ -1,0 +1,42 @@
+[
+    {
+        "friendly_name": "0x0017880108b21761",
+        "type": "lightbulb",
+        "name": "Lampe Bureau Ramzy",
+        "room_name": "Chambre",
+        "background_color": "#004091",
+        "manufacturer": "Philips",
+        "is_fav": true,
+        "model": "9290022166"
+    },
+    {
+        "friendly_name": "0x0017880108b21762",
+        "type": "lightbulb",
+        "name": "Lampe Chevet Ramzy",
+        "room_name": "Chambre",
+        "background_color": "#004091",
+        "manufacturer": "Xiaomi",
+        "is_fav": true,
+        "model": "9290022166"
+    },
+    {
+        "friendly_name": "0x0017880108b21763",
+        "type": "lightbulb",
+        "name": "Lampe Chevet Ramzy",
+        "room_name": "Chambre",
+        "background_color": "#004091",
+        "manufacturer": "Xiaomi",
+        "is_fav": true,
+        "model": "9290022166"
+    },
+    {
+        "friendly_name": "0x0017880108b21764",
+        "type": "lightbulb",
+        "name": "Lampe Chevet Ramzy",
+        "room_name": "Chambre",
+        "background_color": "#004091",
+        "manufacturer": "Xiaomi",
+        "is_fav": true,
+        "model": "9290022166"
+    }
+]

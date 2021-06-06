@@ -5,6 +5,8 @@ var cookieParser = require('cookie-parser');
 var usersRouter = require('./routes/users');
 var resetRouter = require('./routes/reset');
 var sceneRouter = require('./routes/scene');
+var actionRouter = require('./routes/action');
+var deviceRouter = require('./routes/device');
 
 const swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
 
@@ -16,6 +18,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/users', usersRouter);
+app.use('/device', deviceRouter);
+app.use('/action', actionRouter);
 app.use('/scene', sceneRouter);
 app.use('/reset', resetRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
