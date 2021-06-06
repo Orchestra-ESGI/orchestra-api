@@ -54,6 +54,8 @@ router.get('/supported', async function(req, res, next) {
 
 router.post('/action', async function(req, res, next) {
 
+    let client = await createMqttClient();
+
     console.log(req.body.friendly_name);
     console.log(req.body.actions);
     //await client.subscribe("zigbee2mqtt/" + req.body.friendly_name);
