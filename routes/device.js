@@ -68,14 +68,14 @@ router.post('/add', async function(req, res, next) {
     let parsedFile = yaml.parse(file);
     let oldFriendlyNames = Object.keys(parsedFile.devices);
 
+    let newFile = fs.readFileSync('../opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
+    let newParsedFile = yaml.parse(newFile);
+    let newFriendlyNames = Object.keys(newParsedFile.devices);
+
     if (req.body.reset) {
         await mqttFactoryReset(client);
         await sleep(3000);
     }
-
-    let newFile = fs.readFileSync('../opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
-    let newParsedFile = yaml.parse(newFile);
-    let newFriendlyNames = Object.keys(newParsedFile.devices);
 
     while(oldFriendlyNames.length === newFriendlyNames.length && count <= 5) {
         newFile = fs.readFileSync('../opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
