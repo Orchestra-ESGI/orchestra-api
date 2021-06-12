@@ -11,7 +11,7 @@ router.post('/', async function(req, res, next) {
         })
     }
 
-    client.publish('zigbee2mqtt/' + req.body.friendly_name + '/set', JSON.stringify(req.body.actions));
+    await client.publish('zigbee2mqtt/' + req.body.friendly_name + '/set', JSON.stringify(req.body.actions));
 
     await client.end();
     res.send({

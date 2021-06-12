@@ -16,7 +16,7 @@ router.get('/all', async function(req, res, next) {
     let client = await createMqttClient();
 
     let rawDevices = fs.readFileSync('mockDevice.json');
-    let rawActionConf = fs.readFileSync('devices.json');
+    let rawActionConf = fs.readFileSync('device_configuration.json');
     let actionConf = JSON.parse(rawActionConf);
     var mockDevices = JSON.parse(rawDevices);
     for (let i in mockDevices) {
@@ -128,7 +128,6 @@ router.post('/action', async function(req, res, next) {
 
     let client = await createMqttClient();
 
-    //await client.subscribe("zigbee2mqtt/" + req.body.friendly_name);
     await client.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
 
     await client.end();

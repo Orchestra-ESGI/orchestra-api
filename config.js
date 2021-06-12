@@ -1,6 +1,9 @@
 const PORT = process.env.PORT || 3000;
 const BASEAPPURL = process.env.BASEAPPURL || 'http://localhost:3000/';
 const BROKERURL = process.env.BROKERURL || "mqtt://192.168.1.33:1883";
+const MongoClient = require('mongodb').MongoClient;
+const ObjectId = require('mongodb').ObjectId;
+const MONGODBURL = process.env.MONGODBURL || "mongodb://localhost:27017/orchestra";
 const mqtt = require('async-mqtt');
 const clientOpts = {
     username: "pi",
@@ -75,6 +78,9 @@ function sleep(ms) {
 module.exports = {
     PORT,
     BASEAPPURL,
+    MONGODBURL,
+    MongoClient,
+    ObjectId,
     createMqttClient,
     convertXyColorToHex,
     createTimer,
