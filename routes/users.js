@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+const fs = require('fs');
+const { execSync } = require('child_process');
 const { 
     MONGODBURL,
     MongoClient
@@ -19,5 +21,19 @@ router.get('/all', async function(req, res, next) {
         error: null
     });
 });
+
+router.post('/:id', async function(req, res, next) {
+
+    // stderr is sent to stderr of parent process
+    // you can set options.stdio if you want it to go elsewhere
+    let stdout = execSync('python delete.py ' + req.params.id);
+
+    res.send({
+        results,
+        error: null
+    });
+});
+
+
 
 module.exports = router;
