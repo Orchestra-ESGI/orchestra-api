@@ -56,9 +56,8 @@ function createTimer(devices, res, client) {
             devices[i]["is_reachable"] = devices[i]['is_complete'];
             delete devices[i]['is_complete'];
         }
-
         await client.end()
-
+        
         res.send({
             devices: devices,
             error: null
@@ -68,6 +67,7 @@ function createTimer(devices, res, client) {
 }
 
 async function mqttFactoryReset(client) {
+    console.log("Resetting devices...");
     await client.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
 }
 

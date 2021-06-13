@@ -1,10 +1,11 @@
 #!/usr/bin/python
+import sys
 
 friendlyName = str(sys.argv[1])
 
-with open("/orchestra-api/db/database.db", "r") as f:
+with open("/opt/zigbee2mqtt/data/database.db", "r") as f:
     lines = f.readlines()
-with open("/orchestra-api/db/database.db", "w") as f:
+with open("/opt/zigbee2mqtt/data/database.db", "w") as f:
     for line in lines:
         if friendlyName not in line:
             f.write(line)
