@@ -5,8 +5,7 @@ var router = express.Router();
 const { execSync } = require('child_process');
 
 const {
-    MONGODBURL,
-    MongoClient,
+    createMongoDBClient,
     createMqttClient,
     convertXyColorToHex,
     createTimer,
@@ -15,12 +14,10 @@ const {
 } = require('../config');
 
 router.get('/all', async function(req, res, next) {
-    const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-    const db = client.db("orchestra");
-    const col = db.collection('device');
+    const client = await createMongoDBClient();
+    const mqttClient = await createMqttClient();
 
-    let mqttClient = await createMqttClient();
+    const col = client.db("orchestra").collection('device');
 
     var devices = await col.find().toArray();
     let rawActionConf = fs.readFileSync('./configuration/device_configuration.json');
@@ -71,12 +68,10 @@ router.get('/supported', async function(req, res, next) {
 });
 
 router.post('/add', async function(req, res, next) {
-    const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-    const db = client.db("orchestra");
-    const col = db.collection('device');
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection('device');
 
-    let mqttClient = await createMqttClient();
+    const mqttClient = await createMqttClient();
     var count = 0;
 
     const file = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8')
@@ -89,6 +84,7 @@ router.post('/add', async function(req, res, next) {
 
     if (req.body.reset) {
         await mqttFactoryReset(mqttClient);
+        await mqttClient.end();
         await sleep(3000);
     }
 
@@ -122,7 +118,6 @@ router.post('/add', async function(req, res, next) {
     }
 
     await col.insertOne(objectConf);
-    await mqttClient.end();
     res.send({
         error: null
     });
@@ -130,7 +125,7 @@ router.post('/add', async function(req, res, next) {
 
 router.post('/action', async function(req, res) {
 
-    let mqttClient = await createMqttClient();
+    const mqttClient = await createMqttClient();
     await mqttClient.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
     await mqttClient.end();
 
@@ -140,18 +135,17 @@ router.post('/action', async function(req, res) {
 });
 
 router.delete('/:id', async function(req, res) {
-    const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-    const db = client.db("orchestra");
-    const col = db.collection('device');
-
+    const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
+
+    const col = client.db("orchestra").collection('device');
+
     let removePayload = {
         id: req.params.id,
         force: true
     }
     await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
-    console.log("publish done")
+    await mqttClient.end();
     
     const file = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8')
     let parsedFile = yaml.parse(file);

@@ -1,5 +1,3 @@
-const PORT = process.env.PORT || 3000;
-const BASEAPPURL = process.env.BASEAPPURL || 'http://localhost:3000/';
 const BROKERURL = process.env.BROKERURL || "mqtt://192.168.1.33:1883";
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
@@ -12,7 +10,13 @@ const clientOpts = {
 }
 
 async function createMqttClient() {
-    return mqtt.connect(BROKERURL, clientOpts);
+    return await mqtt.connect(BROKERURL, clientOpts);
+}
+
+async function createMongoDBClient() {
+    const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
+    await client.connect();
+    return client;
 }
 
 function convertXyColorToHex(x, y, bri) {
@@ -76,11 +80,8 @@ function sleep(ms) {
 }
 
 module.exports = {
-    PORT,
-    BASEAPPURL,
-    MONGODBURL,
-    MongoClient,
     ObjectId,
+    createMongoDBClient,
     createMqttClient,
     convertXyColorToHex,
     createTimer,

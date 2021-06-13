@@ -4,16 +4,16 @@ const { createMqttClient } = require('../config');
 
 router.post('/', async function(req, res, next) {
 
-    let client = await createMqttClient();
+    const mqttClient = await createMqttClient();
     if (!req.body.friendly_name || req.body.friendly_name == "" || !req.body.actions) {
         res.send({
             error: "error"
         })
     }
 
-    await client.publish('zigbee2mqtt/' + req.body.friendly_name + '/set', JSON.stringify(req.body.actions));
+    await mqttClient.publish('zigbee2mqtt/' + req.body.friendly_name + '/set', JSON.stringify(req.body.actions));
 
-    await client.end();
+    await mqttClient.end();
     res.send({
         error: null
     });
