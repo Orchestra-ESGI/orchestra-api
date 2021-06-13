@@ -24,11 +24,13 @@ router.get('/all', async function(req, res, next) {
     let actionConf = JSON.parse(rawActionConf);
 
     for (let i in devices) {
-        let action = actionConf.lightbulb[devices[i].manufacturer];
-        devices[i]["is_complete"] = false;
-        devices[i]["actions"] = action.actions;
-        await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-        await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": "", "color": { "hex": "" } }));
+        if (devices[i].type !== "unknown") {
+            let action = actionConf.lightbulb[devices[i].manufacturer];
+            devices[i]["is_complete"] = false;
+            devices[i]["actions"] = action.actions;
+            await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
+            await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": "", "color": { "hex": "" } }));
+        }
     }
 
     var timer = createTimer(devices, res, mqttClient);

@@ -1,6 +1,8 @@
+require('./listener');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+
 
 var usersRouter = require('./routes/users');
 var sceneRouter = require('./routes/scene');

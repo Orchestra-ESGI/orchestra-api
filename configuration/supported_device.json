@@ -5,7 +5,6 @@
             {
                 "type": "lightbulb",
                 "name": "Philips Hue White",
-                "manufacturer": "Philips",
                 "model": "9290022167",
                 "image": "https://images-na.ssl-images-amazon.com/images/I/410xhbf4MRL.jpg",
                 "documentation": null
@@ -13,7 +12,6 @@
             {
                 "type": "lightbulb",
                 "name": "Philips Hue Color",
-                "manufacturer": "Philips",
                 "model": "9290022166",
                 "image": "https://www.zigbee2mqtt.io/images/devices/9290022166.jpg",
                 "documentation": null
@@ -21,7 +19,6 @@
             {
                 "type": "statelessProgrammableSwitch",
                 "name": "Philips Hue smart button",
-                "manufacturer": "Philips",
                 "model": "8718699693985",
                 "image": "https://www.zigbee2mqtt.io/images/devices/8718699693985.jpg",
                 "documentation": null
@@ -34,7 +31,6 @@
             {
                 "type": "statelessProgrammableSwitch",
                 "name": "SONOFF Switch",
-                "manufacturer": "SONOFF",
                 "model": "SNZB-01",
                 "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-01.jpg",
                 "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-01.html#pairing"
@@ -42,7 +38,6 @@
             {
                 "type": "sensor",
                 "name": "SONOFF Motion Sensor",
-                "manufacturer": "SONOFF",
                 "model": "SNZB-03",
                 "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-03.jpg",
                 "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-03.html#pairing"
@@ -55,7 +50,6 @@
             {
                 "type": "statelessProgrammableSwitch",
                 "name": "IKEA Switch",
-                "manufacturer": "IKEA",
                 "model": "E1743",
                 "image": "https://www.zigbee2mqtt.io/images/devices/E1743.jpg",
                 "documentation": "https://www.zigbee2mqtt.io/devices/E1743.html#pairing"
