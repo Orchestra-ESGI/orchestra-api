@@ -1,12 +1,10 @@
 #!/usr/bin/python
 
 friendlyName = str(sys.argv[1])
-with open('db/database.db') as myFile:
-    for num, line in enumerate(myFile, 1):
-        if friendlyName in line:
-            del lines[num]
-    
-    newFile = open('db/database.db', 'w+')
+
+with open("/orchestra-api/db/database.db", "r") as f:
+    lines = f.readlines()
+with open("/orchestra-api/db/database.db", "w") as f:
     for line in lines:
-        newFile.write(line)
-    newFile.close()
+        if friendlyName not in line:
+            f.write(line)

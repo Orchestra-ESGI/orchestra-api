@@ -29,7 +29,6 @@ router.post('/:id', async function(req, res, next) {
     let stdout = execSync('python delete.py ' + req.params.id);
 
     res.send({
-        results,
         error: null
     });
 });
