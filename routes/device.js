@@ -69,60 +69,35 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
-router.post('/add', async function(req, res, next) {
+router.post('/add', async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('device');
 
-    const mqttClient = await createMqttClient();
-    var count = 0;
-
-    const file = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8')
-    let parsedFile = yaml.parse(file);
-    let oldFriendlyNames = Object.keys(parsedFile.devices);
-
-    var newFile = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
-    var newParsedFile = yaml.parse(newFile);
-    var newFriendlyNames = Object.keys(newParsedFile.devices);
-
-    if (req.body.reset) {
-        await mqttFactoryReset(mqttClient);
-        await mqttClient.end();
-        await sleep(3000);
-    }
-
-    while(oldFriendlyNames.length === newFriendlyNames.length && count <= 5) {
-        newFile = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8');
-        newParsedFile = yaml.parse(newFile);
-        newFriendlyNames = Object.keys(newParsedFile.devices);
-        console.log("while new: ", newFriendlyNames);
-        count += 1
-        await sleep(2000);
-    }
-
-    if (count >= 5) {
-        res.send({
-            error: "Timed out, searching exceeded limit"
-        });
-        return;
-    }
-
-    var index = -1
-
-    for (let i in newFriendlyNames) {
-        if(!oldFriendlyNames.includes(newFriendlyNames[i])) {
-            index = i;
+    await col.updateOne(
+        { friendly_name: req.body.friendly_name },
+        { 
+            $set: { 
+                name: req.body.name,
+                room_name: req.body.room_name,
+                background_color: req.body.background_color,
+                type: req.body.type
+            } 
         }
-    }
+    );
 
-    let objectConf = {
-        ...req.body,
-        friendly_name: newFriendlyNames[index]
-    }
-
-    await col.insertOne(objectConf);
     res.send({
         error: null
     });
+});
+
+router.post('/reset', async function(req, res, next) {
+    const mqttClient = await createMqttClient();
+    await mqttClient.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
+    await mqttClient.end()
+
+    res.send({
+        error: null
+    })
 });
 
 router.post('/action', async function(req, res) {

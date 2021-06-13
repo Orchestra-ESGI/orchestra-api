@@ -70,11 +70,6 @@ function createTimer(devices, res, client) {
     }, 3000);
 }
 
-async function mqttFactoryReset(client) {
-    console.log("Resetting devices...");
-    await client.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
-}
-
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -85,6 +80,5 @@ module.exports = {
     createMqttClient,
     convertXyColorToHex,
     createTimer,
-    mqttFactoryReset,
     sleep
 };
