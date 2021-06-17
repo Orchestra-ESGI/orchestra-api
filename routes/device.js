@@ -1,4 +1,3 @@
-const fs = require('fs');
 const yaml = require('yaml');
 var express = require('express');
 var router = express.Router();
@@ -9,8 +8,7 @@ const {
     createMqttClient,
     convertXyColorToHex,
     createTimer,
-    mqttFactoryReset,
-    sleep
+    fs
 } = require('../config');
 
 router.get('/all', async function(req, res, next) {
@@ -46,11 +44,11 @@ router.get('/all', async function(req, res, next) {
                 case 'lightbulb':
                     devices[index].actions.state = parsedMessage.state;
                     devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
-                    if (parsedMessage.color) {
-                        devices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
-                    } else {
-                        devices[index].actions.color.hex = ""
-                    }
+                    //if (parsedMessage.color) {
+                        //devices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
+                    //} else {
+                        devices[index].actions.color.hex = "#FF0000";
+                    //}
                     devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                     break;
             }
@@ -93,7 +91,7 @@ router.post('/add', async function(req, res) {
 router.post('/reset', async function(req, res, next) {
     const mqttClient = await createMqttClient();
     await mqttClient.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
-    await mqttClient.end()
+    await mqttClient.end();
 
     res.send({
         error: null
@@ -122,19 +120,11 @@ router.delete('/:id', async function(req, res) {
         force: true
     }
     await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
-    await mqttClient.end();
-    
-    const file = fs.readFileSync('/opt/zigbee2mqtt/data/configuration.yaml', 'utf8')
-    let parsedFile = yaml.parse(file);
-    delete parsedFile.devices[req.params.id];
-    fs.writeFileSync('/opt/zigbee2mqtt/data/configuration.yaml', yaml.stringify(parsedFile));
-    console.log("Written")
-
-
-    execSync('python /orchestra-api/delete.py ' + req.params.id);
-    console.log("Executed python func")
     await col.deleteOne({ friendly_name: req.params.id });
-    console.log("delete from db")
+    
+    await mqttClient.end();
+    await client.close();
+    console.log("delete from db");
 
     res.send({
         error: null

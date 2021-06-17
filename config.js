@@ -8,6 +8,7 @@ const clientOpts = {
     password: "nassimpi",
     clientId: "API"
 }
+const fs = require('fs');
 
 async function createMqttClient() {
     return await mqtt.connect(BROKERURL, clientOpts);
@@ -74,8 +75,29 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function getType(json) {
+    var type = "unkown";
+    if (json.definition) {
+        const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+        const actionConf = JSON.parse(rawActionConf);
+        for (let i in actionConf) {
+            console.log("JSON " + JSON.stringify(json));
+            if (actionConf[i].brand === json.definition.vendor) {
+                for (let j in actionConf[i].devices) {
+                    if (actionConf[i].devices[j].model === json.definition.model) {
+                        type = actionConf[i].devices[j].type
+                    }
+                }
+            }
+        }
+    }
+    return type;
+}
+
 module.exports = {
     ObjectId,
+    fs,
+    getType,
     createMongoDBClient,
     createMqttClient,
     convertXyColorToHex,
