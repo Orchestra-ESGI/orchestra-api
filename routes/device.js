@@ -23,7 +23,7 @@ router.get('/all', async function(req, res, next) {
 
     for (let i in devices) {
         if (devices[i].type !== "unknown") {
-            let action = actionConf.lightbulb[devices[i].manufacturer];
+            let action = actionConf[devices[i].type][devices[i].manufacturer];
             devices[i]["is_complete"] = false;
             devices[i]["actions"] = action.actions;
             await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
@@ -50,6 +50,9 @@ router.get('/all', async function(req, res, next) {
                         devices[index].actions.color.hex = "#FF0000";
                     //}
                     devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
+                    break;
+                case 'switch':
+                    devices[index].actions.state = parsedMessage.state;
                     break;
             }
         }
@@ -121,7 +124,7 @@ router.delete('/:id', async function(req, res) {
     }
     await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
     await col.deleteOne({ friendly_name: req.params.id });
-    
+
     await mqttClient.end();
     await client.close();
     console.log("delete from db");

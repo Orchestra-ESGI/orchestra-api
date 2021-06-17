@@ -1,8 +1,7 @@
 const {
     createMongoDBClient,
     createMqttClient,
-    getType,
-    fs
+    getType
 } = require('./config');
 
 (async () => {

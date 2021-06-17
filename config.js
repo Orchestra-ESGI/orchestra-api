@@ -81,7 +81,6 @@ function getType(json) {
         const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
         const actionConf = JSON.parse(rawActionConf);
         for (let i in actionConf) {
-            console.log("JSON " + JSON.stringify(json));
             if (actionConf[i].brand === json.definition.vendor) {
                 for (let j in actionConf[i].devices) {
                     if (actionConf[i].devices[j].model === json.definition.model) {
