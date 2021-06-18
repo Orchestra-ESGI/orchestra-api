@@ -18,6 +18,7 @@ const {
             var parsedMessage = JSON.parse(message.toString());
             for(let i in parsedMessage) {
                 if (parsedMessage[i].friendly_name !== "Coordinator") {
+                    console.log(parsedMessage[i].friendly_name);
                     var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
                     if (device.length === 0) {
                         if (parsedMessage[i].definition) {
