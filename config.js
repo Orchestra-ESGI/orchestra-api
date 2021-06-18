@@ -71,10 +71,6 @@ function createTimer(devices, res, client) {
     }, 3000);
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 function getType(json) {
     var type = "unkown";
     if (json.definition) {
@@ -100,6 +96,5 @@ module.exports = {
     createMongoDBClient,
     createMqttClient,
     convertXyColorToHex,
-    createTimer,
-    sleep
+    createTimer
 };
