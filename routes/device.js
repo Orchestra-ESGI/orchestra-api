@@ -1,7 +1,5 @@
-const yaml = require('yaml');
 var express = require('express');
 var router = express.Router();
-const { execSync } = require('child_process');
 
 const {
     createMongoDBClient,
