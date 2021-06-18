@@ -7,11 +7,8 @@ if [ $1 = false ]; then
 fi
 
 sudo systemctl stop orchestra
-echo "before pull"
 sudo git pull
-echo "before npm install"
 sudo npm install
-echo "before starting service..."
 sudo systemctl start orchestra
 
 echo "Update done!"
