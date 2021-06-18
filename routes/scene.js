@@ -59,4 +59,16 @@ router.post('/:id', async function(req, res, next) {
     });
 });
 
+router.delete('/:id', async function(req, res) {
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection('scene');
+    
+    await col.deleteOne({ _id: ObjectId(req.params.id) });
+    await client.close();
+
+    res.send({
+        error: null
+    });
+});
+
 module.exports = router;
