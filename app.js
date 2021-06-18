@@ -1,4 +1,5 @@
 require('./listener');
+require('./auto-update');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
