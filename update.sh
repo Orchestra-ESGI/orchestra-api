@@ -6,9 +6,5 @@ if [ $1 = false ]; then
     exit 1
 fi
 
-sudo systemctl stop orchestra
-sudo git pull
-sudo npm install
-sudo systemctl start orchestra
-
-echo "Update done!"
+sudo chmod 777 /orchestra-api/pull.sh
+sudo sh /orchestra-api/pull.sh
