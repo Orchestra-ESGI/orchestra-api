@@ -2,7 +2,7 @@
     "lightbulb": {
         "Philips": {
             "actions": {
-                "state": "ON",
+                "state": "on",
                 "brightness": {
                     "min_val": 0,
                     "max_val": 150
@@ -18,7 +18,7 @@
         },
         "Xiaomi": {
             "actions": {
-                "state": "ON",
+                "state": "on",
                 "brightness": {
                     "min_val": 0,
                     "max_val": 150
@@ -36,7 +36,7 @@
     "switch": {
         "OSRAM": {
             "actions": {
-                "state": "ON"
+                "state": "on"
             }
         }
     }

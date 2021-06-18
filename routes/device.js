@@ -39,7 +39,7 @@ router.get('/all', async function(req, res, next) {
         if (devices[index]["is_complete"] === false) {
             switch(devices[index].type) {
                 case 'lightbulb':
-                    devices[index].actions.state = parsedMessage.state;
+                    devices[index].actions.state = parsedMessage.state.toLowerCase();
                     devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
                     //if (parsedMessage.color) {
                         //devices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
@@ -49,7 +49,7 @@ router.get('/all', async function(req, res, next) {
                     devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                     break;
                 case 'switch':
-                    devices[index].actions.state = parsedMessage.state;
+                    devices[index].actions.state = parsedMessage.state.toLowerCase();
                     break;
             }
         }
