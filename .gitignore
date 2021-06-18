@@ -106,3 +106,4 @@ package-lock.json
 
 # MacOS files
 .DS_Store
+update.txt
