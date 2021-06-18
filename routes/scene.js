@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const {
-    ObjectID,
+    ObjectId,
     createMqttClient,
     createMongoDBClient,
 } = require('../config');
@@ -38,7 +38,7 @@ router.post('/:id', async function(req, res, next) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
 
-    let results = await col.find({ _id: ObjectID(req.params.id)}).toArray();
+    let results = await col.find({ _id: ObjectId(req.params.id)}).toArray();
 
     if (results.length === 0) {
         res.send({

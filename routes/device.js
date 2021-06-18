@@ -6,7 +6,6 @@ const { execSync } = require('child_process');
 const {
     createMongoDBClient,
     createMqttClient,
-    convertXyColorToHex,
     createTimer,
     fs
 } = require('../config');
