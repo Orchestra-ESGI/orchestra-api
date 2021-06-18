@@ -41,11 +41,7 @@ router.get('/all', async function(req, res, next) {
                 case 'lightbulb':
                     devices[index].actions.state = parsedMessage.state.toLowerCase();
                     devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
-                    //if (parsedMessage.color) {
-                        //devices[index].actions.color.hex = convertXyColorToHex(parsedMessage.color.x, parsedMessage.color.y, parsedMessage.brightness);
-                    //} else {
-                        devices[index].actions.color.hex = "#FF0000";
-                    //}
+                    devices[index].actions.color.hex = "#FF0000";
                     devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                     break;
                 case 'switch':
