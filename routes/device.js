@@ -126,7 +126,6 @@ router.delete('/:id', async function(req, res) {
 
     await mqttClient.end();
     await client.close();
-    console.log("delete from db");
 
     res.send({
         error: null
