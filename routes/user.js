@@ -44,7 +44,7 @@ router.post('/signup', async (req, res, next) => {
             is_verified: false
         });
 
-        var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://localhost:3000/user/redirect?id=' + result.ops[0]._id + '">click here</a>';
+        var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://192.168.1.33:3000/user/redirect?id=' + result.ops[0]._id + '">click here</a>';
         
         var mailOptions = {
             from: 'orchestra.nrv.dev@gmail.com',
