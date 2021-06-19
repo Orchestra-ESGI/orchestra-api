@@ -4,7 +4,9 @@ const validator = require('validator');
 const {
     createMongoDBClient,
     JWT_KEY,
-    jwt
+    jwt,
+    transporter,
+    ObjectId
 } = require("../config");
 
 /* RÉCUPERATION DE TOUT LES USERS */
@@ -35,15 +37,33 @@ router.post('/signup', async (req, res, next) => {
     } else if (data.some(data => data.email === req.body.email)) {
         res.status(400).send({error: 'Cet email est déjà associé à un compte'});
     } else {
-        await col.insertOne({
+
+        var result = await col.insertOne({
             email: req.body.email,
             password: req.body.password,
-            is_verified: true
+            is_verified: false
         });
 
-        res.status(200).send({
-            error: null
-        })
+        var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://localhost:3000/user/redirect?id=' + result.ops[0]._id + '">click here</a>';
+        
+        var mailOptions = {
+            from: 'orchestra.nrv.dev@gmail.com',
+            to: req.body.email,
+            subject: '[Orchestra] Verify your email',
+            html
+          };
+          
+          transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+                res.status(200).send({
+                    error
+                });
+            } else {
+                res.status(200).send({
+                    error: null
+                });
+            }
+          });
     }
     await client.close();
 });
@@ -76,6 +96,34 @@ router.post('/login', async (req, res, next) => {
     }
 
     await client.close();
+});
+
+router.get('/verify', async (req, res, next) => {
+
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection("user");
+
+    if (req.query.id) {
+        await col.updateOne(
+            { _id: ObjectId(req.query.id) },
+            {
+                $set: {
+                    is_verified: true
+                }
+            }
+        );
+        res.status(403).send({
+            error: null
+        })
+    } else {
+        res.status(200).send({
+            error: 'Wrong id'
+        });
+    }
+});
+
+router.get('/redirect', async (req, res, next) => {
+    res.redirect('/user/verify?id='+ req.query.id);
 });
 
 module.exports = router;

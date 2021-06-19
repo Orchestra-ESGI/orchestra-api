@@ -6,15 +6,24 @@ const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const jwt = require('jsonwebtoken');
 const mqtt = require('async-mqtt');
+const nodemailer = require('nodemailer');
+const fs = require('fs');
 const clientOpts = {
     username: "pi",
     password: "nassimpi",
     clientId: "API"
 }
-const fs = require('fs');
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: 'orchestra.nrv.dev@gmail.com',
+        pass: 'GSr6Dw&6$Qj7#2'
+    }
+});
+
 
 async function createMqttClient() {
-    return await mqtt.connect(BROKERURL, clientOpts);
+    return mqtt.connect(BROKERURL, clientOpts);
 }
 
 async function createMongoDBClient() {
@@ -63,6 +72,7 @@ module.exports = {
     APP_KEY,
     jwt,
     fs,
+    transporter,
     getType,
     createMongoDBClient,
     createMqttClient,
