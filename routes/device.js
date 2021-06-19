@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const {
+    ObjectId,
     createMongoDBClient,
     createMqttClient,
     createTimer,
@@ -105,18 +106,22 @@ router.post('/action', async function(req, res) {
     });
 });
 
-router.delete('/:id', async function(req, res) {
+router.delete('/', async function(req, res) {
     const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
 
     const col = client.db("orchestra").collection('device');
 
-    let removePayload = {
-        id: req.params.id,
-        force: true
+    for (let i in req.body.friendly_names) {
+        let removePayload = {
+            id: req.body.friendly_names[i],
+            force: true
+        }
+
+        await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
     }
-    await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
-    await col.deleteOne({ friendly_name: req.params.id });
+
+    await col.deleteMany({ friendly_name: { $in: req.body.friendly_names } });
 
     await mqttClient.end();
     await client.close();

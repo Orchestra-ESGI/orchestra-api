@@ -59,11 +59,16 @@ router.post('/:id', async function(req, res, next) {
     });
 });
 
-router.delete('/:id', async function(req, res) {
+router.delete('/', async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
-    
-    await col.deleteOne({ _id: ObjectId(req.params.id) });
+
+    var objectIds = [];
+    for (let i in req.body.ids) {
+        objectIds.push(ObjectId(req.body.ids[i]));
+    }
+
+    await col.deleteMany({ _id: { $in: objectIds} });
     await client.close();
 
     res.send({
