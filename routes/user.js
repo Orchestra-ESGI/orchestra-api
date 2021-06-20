@@ -44,12 +44,15 @@ router.post('/signup', async (req, res, next) => {
             is_verified: false
         });
 
-        jwt.sign(result.ops[0], JWT_KEY, { expiresIn: '1h' }, (err, token) => {
+        jwt.sign({
+            email: result.ops[0].email,
+            is_verified: result.ops[0].is_verified
+        }, JWT_KEY, { expiresIn: '1h' }, (err, token) => {
             if (err) {
                 res.send({ error: 'error' });
             } else {
                 var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://192.168.1.33:3000/user/redirect?to=verify&token=' + token + '&id='+ result.ops[0]._id + '">click here</a><br><i>Attention ce lien n\'est disponible qu\'une heure</i>';
-        
+                
                 var mailOptions = {
                     from: 'orchestra.nrv.dev@gmail.com',
                     to: req.body.email,
@@ -139,7 +142,7 @@ router.get('/verify', async (req, res, next) => {
 });
 
 router.get('/redirect', async (req, res, next) => {
-    res.redirect('/user/'+ req.query.to + '?token='+ req.query.token + '&id=' + req.query.id);
+    res.redirect('/user/'+ req.query.to + '?token=' + req.query.token + '&id=' + req.query.id);
 });
 
 module.exports = router;
