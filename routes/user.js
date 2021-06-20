@@ -45,6 +45,7 @@ router.post('/signup', async (req, res, next) => {
         });
 
         jwt.sign({
+            _id: result.ops[0]._id,
             email: result.ops[0].email,
             is_verified: result.ops[0].is_verified
         }, JWT_KEY, { expiresIn: '1h' }, (err, token) => {
