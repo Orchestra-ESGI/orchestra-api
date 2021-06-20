@@ -44,26 +44,32 @@ router.post('/signup', async (req, res, next) => {
             is_verified: false
         });
 
-        var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://192.168.1.33:3000/user/redirect?id=' + result.ops[0]._id + '">click here</a>';
-        
-        var mailOptions = {
-            from: 'orchestra.nrv.dev@gmail.com',
-            to: req.body.email,
-            subject: '[Orchestra] Verify your email',
-            html
-          };
-          
-          transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                res.status(200).send({
-                    error
-                });
+        jwt.sign(result.ops[0], JWT_KEY, { expiresIn: '1h' }, (err, token) => {
+            if (err) {
+                res.send({ error: 'error' });
             } else {
-                res.status(200).send({
-                    error: null
-                });
+                var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://192.168.1.33:3000/user/redirect?to=verify&token=' + token + '&id='+ result.ops[0]._id + '">click here</a><br><i>Attention ce lien n\'est disponible qu\'une heure</i>';
+        
+                var mailOptions = {
+                    from: 'orchestra.nrv.dev@gmail.com',
+                    to: req.body.email,
+                    subject: '[Orchestra] Verify your email',
+                    html
+                  };
+                  
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                        res.status(200).send({
+                            error
+                        });
+                    } else {
+                        res.status(200).send({
+                            error: null
+                        });
+                    }
+                  });
             }
-          });
+        });
     }
     await client.close();
 });
@@ -103,27 +109,37 @@ router.get('/verify', async (req, res, next) => {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection("user");
 
-    if (req.query.id) {
-        await col.updateOne(
-            { _id: ObjectId(req.query.id) },
-            {
-                $set: {
-                    is_verified: true
-                }
+    if (req.query.token && req.query.id) {
+        jwt.verify(req.query.token, JWT_KEY, async (err, data) => {
+            if (err) {
+                await col.deleteOne(
+                    { _id: ObjectId(req.query.id) }
+                );
+                res.status(401).send({ error: 'Le lien a expiré ! Merci de vous réinscrire !' });
+            } else {
+                await col.updateOne(
+                    { _id: ObjectId(data._id) },
+                    {
+                        $set: {
+                            is_verified: true
+                        }
+                    }
+                );
+
+                res.status(200).send({
+                    error: null
+                })
             }
-        );
-        res.status(403).send({
-            error: null
-        })
+        });
     } else {
-        res.status(200).send({
-            error: 'Wrong id'
+        res.status(401).send({
+            error: 'Aucun token d\'authentification n\'a été fourni'
         });
     }
 });
 
 router.get('/redirect', async (req, res, next) => {
-    res.redirect('/user/verify?id='+ req.query.id);
+    res.redirect('/user/'+ req.query.to + '?token='+ req.query.token + '&id=' + req.query.id);
 });
 
 module.exports = router;
