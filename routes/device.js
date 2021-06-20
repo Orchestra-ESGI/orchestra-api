@@ -8,7 +8,9 @@ const {
     fs
 } = require('../config');
 
-router.get('/all', async function(req, res, next) {
+const { verifyHeaders } = require('../middleware/token_verification');
+
+router.get('/all', verifyHeaders, async function(req, res, next) {
     const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
 
@@ -63,7 +65,7 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
-router.post('/add', async function(req, res) {
+router.post('/add', verifyHeaders, async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('device');
 
@@ -84,7 +86,7 @@ router.post('/add', async function(req, res) {
     });
 });
 
-router.post('/reset', async function(req, res, next) {
+router.post('/reset', verifyHeaders, async function(req, res, next) {
     const mqttClient = await createMqttClient();
     await mqttClient.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
     await mqttClient.end();
@@ -94,7 +96,7 @@ router.post('/reset', async function(req, res, next) {
     })
 });
 
-router.post('/action', async function(req, res) {
+router.post('/action', verifyHeaders, async function(req, res) {
 
     const mqttClient = await createMqttClient();
     await mqttClient.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
@@ -105,7 +107,7 @@ router.post('/action', async function(req, res) {
     });
 });
 
-router.delete('/', async function(req, res) {
+router.delete('/', verifyHeaders, async function(req, res) {
     const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
 

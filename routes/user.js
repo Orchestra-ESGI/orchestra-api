@@ -9,8 +9,10 @@ const {
     ObjectId
 } = require("../config");
 
+const { verifyHeaders } = require('../middleware/token_verification');
+
 /* RÉCUPERATION DE TOUT LES USERS */
-router.get('/all', async function (req, res, next) {
+router.get('/all', verifyHeaders, async function (req, res, next) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('user');
 

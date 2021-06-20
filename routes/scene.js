@@ -7,7 +7,9 @@ const {
     createMongoDBClient,
 } = require('../config');
 
-router.get('/all', async function (req, res, next) {
+const { verifyHeaders } = require('../middleware/token_verification');
+
+router.get('/all', verifyHeaders, async function (req, res, next) {
 
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
@@ -21,7 +23,7 @@ router.get('/all', async function (req, res, next) {
 
 });
 
-router.post('/', async function(req, res, next) {
+router.post('/', verifyHeaders, async function(req, res, next) {
 
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
@@ -33,7 +35,7 @@ router.post('/', async function(req, res, next) {
     });
 });
 
-router.post('/:id', async function(req, res, next) {
+router.post('/:id', verifyHeaders, async function(req, res, next) {
 
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
@@ -59,7 +61,7 @@ router.post('/:id', async function(req, res, next) {
     });
 });
 
-router.delete('/', async function(req, res) {
+router.delete('/', verifyHeaders, async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
 
