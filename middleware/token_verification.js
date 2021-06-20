@@ -16,8 +16,12 @@ function verifyHeaders(req, res, next) {
                 if (err) {
                     res.status(401).send({ error: 'Utilisateur non connecté' });
                 } else {
-                    req.token = data;
-                    next();
+                    if (data.is_verified) {
+                        req.token = data;
+                        next();
+                    } else {
+                        res.status(401).send( { error: 'Utilisateur non vérifié' });
+                    }
                 }
             });
         } else {
