@@ -85,7 +85,7 @@ router.post('/login', async (req, res, next) => {
     const col = client.db("orchestra").collection("user");
 
     var result = await col.find({ email: req.body.email, password: req.body.password, is_verified: true }).toArray();
-    if (result.length) {
+    if (result.length && result.length !== 0) {
         jwt.sign({
             _id: result[0]._id,
             email: result[0].email
