@@ -90,7 +90,8 @@ router.post('/login', async (req, res, next) => {
     if (result.length && result.length !== 0) {
         jwt.sign({
             _id: result[0]._id,
-            email: result[0].email
+            email: result[0].email,
+            is_verified: result[0].is_verified
         }, JWT_KEY, { expiresIn: '15d' }, (err, token) => {
             if (err) {
                 res.send({ error: 'error' });
