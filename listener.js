@@ -8,6 +8,7 @@ const {
     const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
     const col = client.db("orchestra").collection('device');
+    await col.createIndex({ friendly_name: 1 }, { unique: true } );
 
     const mqttTopic = "zigbee2mqtt/bridge/devices";
     await mqttClient.subscribe(mqttTopic);
@@ -19,7 +20,6 @@ const {
             for(let i in parsedMessage) {
                 if (parsedMessage[i].friendly_name !== "Coordinator") {
                     var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
-                    console.log("LOGGING LISTENER DEVICE : " + device.length);
                     console.log(device);
                     if (device.length === 0) {
                         if (parsedMessage[i].definition) {
