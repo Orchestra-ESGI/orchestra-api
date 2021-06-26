@@ -49,7 +49,7 @@ function createTimer(devices, res, client) {
 }
 
 function getType(json) {
-    var type = "unkown";
+    var type = "unknown";
     if (json.definition) {
         const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
         const actionConf = JSON.parse(rawActionConf);
