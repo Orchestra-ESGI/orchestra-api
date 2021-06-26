@@ -28,7 +28,7 @@ const {
                                 "friendly_name": parsedMessage[i].friendly_name,
                                 "manufacturer": parsedMessage[i].definition.vendor,
                                 "model": parsedMessage[i].definition.model,
-                                "background_color": type === "unkown" ? "#FF0000" : "#00FF00"
+                                "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
                             }
                             await col.insertOne(insertDevice);
                         }
