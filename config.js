@@ -66,6 +66,24 @@ function getType(json) {
     return type;
 }
 
+function getHasColor(json) {
+    var color = false;
+    if (json.definition) {
+        const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+        const actionConf = JSON.parse(rawActionConf);
+        for (let i in actionConf) {
+            if (actionConf[i].brand === json.definition.vendor) {
+                for (let j in actionConf[i].devices) {
+                    if (actionConf[i].devices[j].color) {
+                        color = actionConf[i].devices[j].color
+                    }
+                }
+            }
+        }
+    }
+    return color;
+}
+
 module.exports = {
     ObjectId,
     JWT_KEY,
@@ -74,6 +92,7 @@ module.exports = {
     fs,
     transporter,
     getType,
+    getHasColor,
     createMongoDBClient,
     createMqttClient,
     createTimer

@@ -1,7 +1,8 @@
 const {
     createMongoDBClient,
     createMqttClient,
-    getType
+    getType,
+    getHasColor
 } = require('./config');
 
 (async () => {
@@ -24,10 +25,12 @@ const {
                     if (device.length === 0) {
                         if (parsedMessage[i].definition) {
                             var type = getType(parsedMessage[i]);
+                            var color = getHasColor(parsedMessage[i]);
                             var insertDevice = {
                                 "type": type,
                                 "name": parsedMessage[i].definition.description,
                                 "friendly_name": parsedMessage[i].friendly_name,
+                                "color": color,
                                 "manufacturer": parsedMessage[i].definition.vendor,
                                 "model": parsedMessage[i].definition.model,
                                 "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
