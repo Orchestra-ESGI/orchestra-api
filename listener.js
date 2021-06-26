@@ -21,12 +21,10 @@ const {
             for(let i in parsedMessage) {
                 if (parsedMessage[i].friendly_name !== "Coordinator") {
                     var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
-                    console.log(device);
                     if (device.length === 0) {
                         if (parsedMessage[i].definition) {
                             var type = getType(parsedMessage[i]);
                             var color = getHasColor(parsedMessage[i]);
-                            console.log("ORCHESTRA: COLOR STATE LISTENER: " + color.toString());
                             var insertDevice = {
                                 "type": type,
                                 "name": parsedMessage[i].definition.description,

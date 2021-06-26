@@ -74,7 +74,7 @@ function getHasColor(json) {
         for (let i in actionConf) {
             if (actionConf[i].brand === json.definition.vendor) {
                 for (let j in actionConf[i].devices) {
-                    if (actionConf[i].devices[j].color) {
+                    if (actionConf[i].devices[j].model === json.definition.model) {
                         color = actionConf[i].devices[j].color
                     }
                 }
