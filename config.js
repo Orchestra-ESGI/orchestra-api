@@ -1,4 +1,4 @@
-const BROKERURL = process.env.BROKERURL || "mqtt://192.168.1.33:1883";
+const BROKERURL = process.env.BROKERURL || "mqtt://orchestra.local:1883";
 const MONGODBURL = process.env.MONGODBURL || "mongodb://localhost:27017";
 const JWT_KEY = process.env.JWT_KEY || "orchestra";
 const APP_KEY = process.env.APP_KEY || "orchestra";
@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const clientOpts = {
     username: "pi",
-    password: "nassimpi",
+    password: "orchestrapi",
     clientId: "API"
 }
 const transporter = nodemailer.createTransport({
