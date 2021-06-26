@@ -17,6 +17,7 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
     const col = client.db("orchestra").collection('device');
 
     var devices = await col.find().toArray();
+    console.log(devices);
     let rawActionConf = fs.readFileSync('./configuration/device_configuration.json');
     let actionConf = JSON.parse(rawActionConf);
 
