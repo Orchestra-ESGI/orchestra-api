@@ -11,6 +11,13 @@
             },
             {
                 "type": "lightbulb",
+                "name": "Philips Hue White",
+                "model": "8718699673147",
+                "image": "https://images-na.ssl-images-amazon.com/images/I/410xhbf4MRL.jpg",
+                "documentation": null
+            },
+            {
+                "type": "lightbulb",
                 "name": "Philips Hue Color",
                 "model": "9290022166",
                 "image": "https://www.zigbee2mqtt.io/images/devices/9290022166.jpg",
