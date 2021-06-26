@@ -112,6 +112,7 @@ router.delete('/', verifyHeaders, async function(req, res) {
     const mqttClient = await createMqttClient();
 
     const col = client.db("orchestra").collection('device');
+    const sceneCol = client.db("orchestra").collection('scene');
 
     for (let i in req.body.friendly_names) {
         let removePayload = {
@@ -121,6 +122,19 @@ router.delete('/', verifyHeaders, async function(req, res) {
 
         await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
     }
+
+    await sceneCol.updateMany(
+        {},
+        { 
+            $pull: { 
+                "devices": { 
+                    friendly_name: { 
+                        $in: req.body.friendly_names 
+                    }
+                }
+            }
+        }
+    );
 
     await col.deleteMany({ friendly_name: { $in: req.body.friendly_names } });
 

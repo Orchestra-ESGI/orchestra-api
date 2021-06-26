@@ -54,7 +54,7 @@ router.post('/signup', async (req, res, next) => {
             if (err) {
                 res.send({ error: 'error' });
             } else {
-                var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://192.168.1.33:3000/user/redirect?to=verify&token=' + token + '&id='+ result.ops[0]._id + '">click here</a><br><i>Attention ce lien n\'est disponible qu\'une heure</i>';
+                var html = '<h1>Orchestra validation</h1> To verify your account, <a href="http://orchestra.local:3000/user/redirect?to=verify&token=' + token + '&id='+ result.ops[0]._id + '">click here</a><br><i>Attention ce lien n\'est disponible qu\'une heure</i>';
                 
                 var mailOptions = {
                     from: 'orchestra.nrv.dev@gmail.com',
