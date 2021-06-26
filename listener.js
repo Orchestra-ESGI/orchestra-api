@@ -26,6 +26,7 @@ const {
                         if (parsedMessage[i].definition) {
                             var type = getType(parsedMessage[i]);
                             var color = getHasColor(parsedMessage[i]);
+                            console.log("ORCHESTRA: COLOR STATE LISTENER: " + color.toString());
                             var insertDevice = {
                                 "type": type,
                                 "name": parsedMessage[i].definition.description,

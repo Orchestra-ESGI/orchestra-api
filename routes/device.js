@@ -24,6 +24,7 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
         if (devices[i].type !== "unknown") {
             let action = actionConf[devices[i].type][devices[i].manufacturer];
             devices[i]["is_complete"] = false;
+            console.log("ORCHESTRA: COLOR STATE LISTENER: " + devices[i].color);
             let deviceActions = devices[i].color ? action.color.actions : action.actions
             devices[i]["actions"] = deviceActions;
             await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
@@ -44,6 +45,7 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
                 case 'lightbulb':
                     devices[index].actions.state = parsedMessage.state.toLowerCase();
                     devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
+                    console.log("ORCHESTRA: COLOR STATE LISTENER: " + devices[index].color);
                     if (devices[index].color) {
                         devices[index].actions.color.hex = "#FF0000";
                         devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
