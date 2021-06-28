@@ -35,6 +35,27 @@ router.post('/', verifyHeaders, async function(req, res, next) {
     });
 });
 
+router.patch('/', verifyHeaders, async function(req, res, next) {
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection('scene');
+
+    await col.updateOne(
+        { _id: ObjectId(req.body._id) },
+        {
+            $set: {
+                name: req.body.name,
+                color: req.body.color,
+                description: req.body.description,
+                devices: req.body.devices
+            }
+        }
+    );
+
+    res.send({
+        error: null
+    });
+});
+
 router.post('/:id', verifyHeaders, async function(req, res, next) {
 
     const client = await createMongoDBClient();

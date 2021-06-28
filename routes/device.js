@@ -69,7 +69,7 @@ router.get('/supported', async function(req, res, next) {
     res.send(supportedDevices);
 });
 
-router.post('/add', verifyHeaders, async function(req, res) {
+router.patch('/', verifyHeaders, async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('device');
 
@@ -79,8 +79,7 @@ router.post('/add', verifyHeaders, async function(req, res) {
             $set: { 
                 name: req.body.name,
                 room_name: req.body.room_name,
-                background_color: req.body.background_color,
-                type: req.body.type
+                background_color: req.body.background_color
             } 
         }
     );
