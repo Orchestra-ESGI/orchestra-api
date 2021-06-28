@@ -6,7 +6,7 @@ const {
     createMongoDBClient
 } = require('../config');
 
-function verifyHeaders(req, res, next) {
+async function verifyHeaders(req, res, next) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('user');
 
