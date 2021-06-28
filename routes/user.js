@@ -145,6 +145,17 @@ router.get('/verify', async (req, res, next) => {
     }
 });
 
+router.delete('/', async (req, res, next) => {
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection("user");
+    await col.deleteOne({ email: req.body.email });
+    await client.close();
+
+    res.status(200).send({
+        error: null
+    })
+});
+
 router.get('/redirect', async (req, res, next) => {
     res.redirect('/user/'+ req.query.to + '?token=' + req.query.token + '&id=' + req.query.id);
 });
