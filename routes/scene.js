@@ -103,12 +103,7 @@ router.delete('/ntrvithu', verifyHeaders, async function(req, res) {
     const client = await createMongoDBClient();
     const col = client.db("orchestra").collection('scene');
 
-    var objectIds = [];
-    for (let i in req.body.ids) {
-        objectIds.push(ObjectId(req.body.ids[i]));
-    }
-
-    await col.deleteMany({ _id: { $in: objectIds} });
+    await col.deleteMany({ name: { $in: req.body.names} });
     await client.close();
 
     res.send({
