@@ -98,6 +98,7 @@ router.post('/login', async (req, res, next) => {
             } else {
                 res.send({
                     token,
+                    email: result[0].email,
                     error: null
                 });
             }
