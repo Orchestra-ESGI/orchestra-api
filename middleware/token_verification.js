@@ -1,8 +1,15 @@
-const { JWT_KEY } = require('../config');
-const { APP_KEY } = require('../config');
-const { jwt } = require('../config');
+const { 
+    JWT_KEY,
+    APP_KEY,
+    jwt,
+    ObjectId,
+    createMongoDBClient
+} = require('../config');
 
 function verifyHeaders(req, res, next) {
+    const client = await createMongoDBClient();
+    const col = client.db("orchestra").collection('user');
+
     var appKey = req.get('App-Key');
     const bearerHeader = req.headers.authorization;
 
@@ -17,8 +24,13 @@ function verifyHeaders(req, res, next) {
                     res.status(401).send({ error: 'Utilisateur non connecté' });
                 } else {
                     if (data.is_verified) {
-                        req.token = data;
-                        next();
+                        let res = await col.find({ _id: ObjectId(data._id) }).toArray();
+                        if (res.length == 0) {
+                            res.status(401).send( { error: 'Le token n\'est plus valable' });
+                        } else {
+                            req.token = data;
+                            next();
+                        }
                     } else {
                         res.status(401).send( { error: 'Utilisateur non vérifié' });
                     }

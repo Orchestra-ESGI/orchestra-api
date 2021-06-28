@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 
 var usersRouter = require('./routes/user');
 var sceneRouter = require('./routes/scene');
+var roomRouter = require('./routes/room');
 var deviceRouter = require('./routes/device');
 
 const swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
@@ -21,6 +22,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/user', usersRouter);
 app.use('/device', deviceRouter);
 app.use('/scene', sceneRouter);
+app.use('/room', roomRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app;

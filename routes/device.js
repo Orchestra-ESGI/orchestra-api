@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 const {
+    ObjectId,
     createMongoDBClient,
     createMqttClient,
     createTimer,
@@ -22,6 +23,11 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
 
     for (let i in devices) {
         if (devices[i].type !== "unknown") {
+            const roomCol = client.db("orchestra").collection('room');
+            let room = await roomCol.find({ _id: ObjectId(devices[i].room_id) }).toArray();
+            if (room.length !== 0) {
+                devices[i]["room"] = room[0];
+            }
             let action = actionConf[devices[i].type][devices[i].manufacturer];
             devices[i]["is_complete"] = false;
             let deviceActions = devices[i].color ? action.color.actions : action.actions
@@ -75,12 +81,12 @@ router.patch('/', verifyHeaders, async function(req, res) {
 
     await col.updateOne(
         { friendly_name: req.body.friendly_name },
-        { 
+        {
             $set: { 
                 name: req.body.name,
-                room_name: req.body.room_name,
+                room_id: req.body.room._id,
                 background_color: req.body.background_color
-            } 
+            }
         }
     );
 
