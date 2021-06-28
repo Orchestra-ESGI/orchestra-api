@@ -24,8 +24,8 @@ async function verifyHeaders(req, res, next) {
                     res.status(401).send({ error: 'Utilisateur non connecté' });
                 } else {
                     if (data.is_verified) {
-                        let res = await col.find({ _id: ObjectId(data._id) }).toArray();
-                        if (res.length == 0) {
+                        let result = await col.find({ _id: ObjectId(data._id) }).toArray();
+                        if (result.length == 0) {
                             res.status(401).send( { error: 'Le token n\'est plus valable' });
                         } else {
                             req.token = data;
