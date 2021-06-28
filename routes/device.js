@@ -27,7 +27,7 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
             let deviceActions = devices[i].color ? action.color.actions : action.actions
             devices[i]["actions"] = deviceActions;
             await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-            await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": "", "color": { "hex": "" } }));
+            await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
         }
     }
 
