@@ -25,11 +25,13 @@ const {
                         if (parsedMessage[i].definition) {
                             var type = getType(parsedMessage[i]);
                             var color = getHasColor(parsedMessage[i]);
+                            var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
                             var insertDevice = {
                                 "type": type,
                                 "name": parsedMessage[i].definition.description,
                                 "friendly_name": parsedMessage[i].friendly_name,
                                 "color": color,
+                                "room_id": room[0]._id,
                                 "manufacturer": parsedMessage[i].definition.vendor,
                                 "model": parsedMessage[i].definition.model,
                                 "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
