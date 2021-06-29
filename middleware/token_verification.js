@@ -42,7 +42,6 @@ async function verifyHeaders(req, res, next) {
                 res.status(401).send({ error: 'Utilisateur non connecté' });
             }
         }
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error

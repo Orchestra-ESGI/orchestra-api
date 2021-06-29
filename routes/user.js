@@ -20,7 +20,6 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
     
         let results = await col.find({}).project({ password: 0 }).toArray();
     
-        await client.close();
         res.send({
             results,
             error: null
@@ -85,8 +84,6 @@ router.post('/signup', async (req, res, next) => {
                 }
             });
         }
-
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
@@ -123,8 +120,6 @@ router.post('/login', async (req, res, next) => {
                 error: 'Cet identifiant ou mot de passe est inconnu'
             });
         }
-
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
@@ -165,8 +160,6 @@ router.get('/verify', async (req, res, next) => {
                 error: 'Aucun token d\'authentification n\'a été fourni'
             });
         }
-
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
@@ -184,8 +177,6 @@ router.delete('/', async (req, res, next) => {
         res.status(200).send({
             error: null
         });
-        
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
