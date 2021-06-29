@@ -47,7 +47,7 @@ function createTimer(devices, res, client) {
                 devices[i]["is_reachable"] = devices[i]['is_complete'];
                 delete devices[i]['is_complete'];
             }
-            await client.end()
+            await client.end();
             
             res.send({
                 devices: devices,

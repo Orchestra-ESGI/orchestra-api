@@ -16,7 +16,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('scene');
     
         let results = await col.find().toArray();
-    
+        await client.close();
+        
         res.send({
             scenes: results,
             error: null
@@ -35,7 +36,8 @@ router.post('/', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('scene');
     
         await col.insertOne(req.body);
-    
+        await client.close();
+
         res.send({
             error: null
         });
@@ -64,6 +66,7 @@ router.patch('/', verifyHeaders, async (req, res) => {
             }
         );
 
+        await client.close();
         res.send({
             error: null
         });
@@ -94,6 +97,9 @@ router.post('/:id', verifyHeaders, async (req, res) => {
             await mqttClient.publish('zigbee2mqtt/' + results[0].devices[i].friendly_name + '/set', JSON.stringify(results[0].devices[i].actions));
         }
 
+        await mqttClient.end();
+        await client.close();
+
         res.send({
             error: null
         });
@@ -116,7 +122,8 @@ router.delete('/', verifyHeaders, async (req, res) => {
         }
     
         await col.deleteMany({ _id: { $in: objectIds} });
-    
+        await client.close();
+
         res.send({
             error: null
         });

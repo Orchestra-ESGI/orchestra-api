@@ -13,7 +13,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('room');
     
         let rooms = await col.find({}).toArray();
-
+        await client.close();
+        
         res.status(200).send({
             rooms,
             error: null
@@ -31,6 +32,7 @@ router.post('/', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('room');
 
         await col.insertOne(req.body);
+        await client.close();
 
         res.status(200).send({
             error: null
