@@ -17,7 +17,7 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
     let results = await col.find().toArray();
 
     res.status(200).send({
-        scenes: results,
+        automations: results,
         error: null
     })
 
@@ -26,6 +26,7 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
 router.post('/', verifyHeaders, async function(req, res, next) {
 
     const client = await createMongoDBClient();
+    const mqttClient = await createMqttClient();
     const col = client.db("orchestra").collection('automation');
 
     await col.insertOne(req.body);

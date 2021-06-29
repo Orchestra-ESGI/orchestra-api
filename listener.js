@@ -5,19 +5,25 @@ const {
     getHasColor
 } = require('./config');
 
-(async () => {
+(async function newDeviceListener() {
     const client = await createMongoDBClient();
     const mqttClient = await createMqttClient();
     const col = client.db("orchestra").collection('device');
+    const automationCol = client.db('orchestra').collection('automation');
     await col.createIndex({ friendly_name: 1 }, { unique: true } );
 
     const mqttTopic = "zigbee2mqtt/bridge/devices";
     await mqttClient.subscribe(mqttTopic);
 
+    var subbedTopic = await automationCol.find().toArray();
+    subbedTopic.forEach(async (element) => {
+        await mqttClient.subscribe('zigbee2mqtt/' + element.target.friendly_name);
+    });
+
     //Called twice dunno why ???????
     mqttClient.on('message', async (topic, message) => {
+        var parsedMessage = JSON.parse(message.toString());
         if (topic === mqttTopic) {
-            var parsedMessage = JSON.parse(message.toString());
             for(let i in parsedMessage) {
                 if (parsedMessage[i].friendly_name !== "Coordinator") {
                     var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
@@ -41,6 +47,21 @@ const {
                     }
                 }
             }
+        } else {
+            const automations = await automationCol.find().toArray();
+            automations.forEach(async (element) => {
+                if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
+                    switch (element.trigger.type) {
+                        case "occupancy":
+                            if (parsedMessage.occupancy === .state) {
+                                for (let i in element.targets) {
+                                    await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets.actions));
+                                }
+                            }
+                            break;
+                    }
+                }
+            });
         }
     });
 })();
