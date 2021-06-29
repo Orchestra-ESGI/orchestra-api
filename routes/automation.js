@@ -126,9 +126,8 @@ router.delete('/', verifyHeaders, async (req, res) => {
         }
     
         await col.deleteMany({ _id: { $in: objectIds} });
-    
-        await mqttClient.end();
         await client.close();
+        
         res.send({
             error: null
         });
