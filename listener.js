@@ -53,7 +53,7 @@ const {
                 if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                     switch (element.trigger.type) {
                         case "occupancy":
-                            if (parsedMessage.occupancy === .state) {
+                            if (parsedMessage.occupancy === element.trigger.state) {
                                 for (let i in element.targets) {
                                     await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets.actions));
                                 }
