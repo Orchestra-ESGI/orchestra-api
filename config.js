@@ -23,64 +23,89 @@ const transporter = nodemailer.createTransport({
 
 
 async function createMqttClient() {
-    return mqtt.connect(BROKERURL, clientOpts);
+    try {
+        return mqtt.connect(BROKERURL, clientOpts);
+    } catch (error) {
+        return error
+    }
 }
 
 async function createMongoDBClient() {
-    const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-    return client;
+    try {
+        const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
+        await client.connect();
+        return client;
+    } catch (error) {
+        console.error(error);
+    }
 }
 
 function createTimer(devices, res, client) {
     return setTimeout(async () => {
-        for (let i in devices) {
-            devices[i]["is_reachable"] = devices[i]['is_complete'];
-            delete devices[i]['is_complete'];
+        try {
+            for (let i in devices) {
+                devices[i]["is_reachable"] = devices[i]['is_complete'];
+                delete devices[i]['is_complete'];
+            }
+            await client.end()
+            
+            res.send({
+                devices: devices,
+                error: null
+            });
+        } catch (error) {
+            res.status(500).send({
+                error
+            });
         }
-        await client.end()
         
-        res.send({
-            devices: devices,
-            error: null
-        });
         return;
     }, 3000);
 }
 
 function getType(json) {
     var type = "unknown";
-    if (json.definition) {
-        const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
-        const actionConf = JSON.parse(rawActionConf);
-        for (let i in actionConf) {
-            if (actionConf[i].brand === json.definition.vendor) {
-                for (let j in actionConf[i].devices) {
-                    if (actionConf[i].devices[j].model === json.definition.model) {
-                        type = actionConf[i].devices[j].type
+    try {
+        if (json.definition) {
+            const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+            const actionConf = JSON.parse(rawActionConf);
+            for (let i in actionConf) {
+                if (actionConf[i].brand === json.definition.vendor) {
+                    for (let j in actionConf[i].devices) {
+                        if (actionConf[i].devices[j].model === json.definition.model) {
+                            type = actionConf[i].devices[j].type
+                        }
                     }
                 }
             }
         }
+    } catch (error) {
+        console.error(error);
     }
+
     return type;
 }
 
 function getHasColor(json) {
     var color = false;
-    if (json.definition) {
-        const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
-        const actionConf = JSON.parse(rawActionConf);
-        for (let i in actionConf) {
-            if (actionConf[i].brand === json.definition.vendor) {
-                for (let j in actionConf[i].devices) {
-                    if (actionConf[i].devices[j].model === json.definition.model) {
-                        color = actionConf[i].devices[j].color
+    try {
+        if (json.definition) {
+            const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+            const actionConf = JSON.parse(rawActionConf);
+            for (let i in actionConf) {
+                if (actionConf[i].brand === json.definition.vendor) {
+                    for (let j in actionConf[i].devices) {
+                        if (actionConf[i].devices[j].model === json.definition.model) {
+                            color = actionConf[i].devices[j].color
+                        }
                     }
                 }
             }
         }
+    } catch (error) {
+        console.error(error);
     }
+
     return color;
 }
 

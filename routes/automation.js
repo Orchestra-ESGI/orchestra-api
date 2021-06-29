@@ -9,96 +9,139 @@ const {
 
 const { verifyHeaders } = require('../middleware/token_verification');
 
-router.get('/all', verifyHeaders, async function (req, res, next) {
+router.get('/all', verifyHeaders, async (req, res) => {
 
-    const client = await createMongoDBClient();
-    const col = client.db("orchestra").collection('automation');
-
-    let results = await col.find().toArray();
-
-    res.status(200).send({
-        automations: results,
-        error: null
-    })
-
-});
-
-router.post('/', verifyHeaders, async function(req, res, next) {
-
-    const client = await createMongoDBClient();
-    const mqttClient = await createMqttClient();
-    const col = client.db("orchestra").collection('automation');
-
-    await col.insertOne(req.body);
-
-    res.send({
-        error: null
-    });
-});
-
-router.patch('/', verifyHeaders, async function(req, res, next) {
-    const client = await createMongoDBClient();
-    const col = client.db("orchestra").collection('automation');
-
-    await col.updateOne(
-        { _id: ObjectId(req.body._id) },
-        {
-            $set: {
-                name: req.body.name,
-                color: req.body.color,
-                description: req.body.description,
-                trigger: req.body.trigger,
-                targets: req.body.targets
-            }
-        }
-    );
-
-    res.send({
-        error: null
-    });
-});
-
-router.post('/:id', verifyHeaders, async function(req, res, next) {
-
-    const client = await createMongoDBClient();
-    const col = client.db("orchestra").collection('automation');
-
-    let results = await col.find({ _id: ObjectId(req.params.id)}).toArray();
-
-    if (results.length === 0) {
-        res.send({
-            error: "No corresponding automations"
+    try {
+        const client = await createMongoDBClient();
+        const col = client.db("orchestra").collection('automation');
+    
+        let results = await col.find().toArray();
+    
+        res.status(200).send({
+            automations: results,
+            error: null
         });
-        return;
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
     }
 
-    const mqttClient = await createMqttClient();
-    for (let i in results[0].targets) {
-        await mqttClient.publish('zigbee2mqtt/' + results[0].devices[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
+    await client.close();
+});
+
+router.post('/', verifyHeaders, async (req, res) => {
+
+    try {
+        const client = await createMongoDBClient();
+        const mqttClient = await createMqttClient();
+        const col = client.db("orchestra").collection('automation');
+    
+        await col.insertOne(req.body);
+    
+        await mqttClient.subscribe('zigbee2mqtt/' + req.body.target.friendly_name);
+
+        res.send({
+            error: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
     }
 
     await mqttClient.end();
     await client.close();
-    res.send({
-        error: null
-    });
 });
 
-router.delete('/', verifyHeaders, async function(req, res) {
-    const client = await createMongoDBClient();
-    const col = client.db("orchestra").collection('automation');
+router.patch('/', verifyHeaders, async (req, res) => {
 
-    var objectIds = [];
-    for (let i in req.body.ids) {
-        objectIds.push(ObjectId(req.body.ids[i]));
+    try {
+        const client = await createMongoDBClient();
+        const col = client.db("orchestra").collection('automation');
+    
+        await col.updateOne(
+            { _id: ObjectId(req.body._id) },
+            {
+                $set: {
+                    name: req.body.name,
+                    color: req.body.color,
+                    description: req.body.description,
+                    trigger: req.body.trigger,
+                    targets: req.body.targets
+                }
+            }
+        );
+    
+        res.send({
+            error: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
     }
 
-    await col.deleteMany({ _id: { $in: objectIds} });
+    await mqttClient.end();
     await client.close();
+});
 
-    res.send({
-        error: null
-    });
+router.post('/:id', verifyHeaders, async (req, res) => {
+
+    try {
+        const client = await createMongoDBClient();
+        const col = client.db("orchestra").collection('automation');
+    
+        let results = await col.find({ _id: ObjectId(req.params.id)}).toArray();
+    
+        if (results.length === 0) {
+            res.send({
+                error: "No corresponding automations"
+            });
+            return;
+        }
+    
+        const mqttClient = await createMqttClient();
+        for (let i in results[0].targets) {
+            await mqttClient.publish('zigbee2mqtt/' + results[0].devices[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
+        }
+    
+        res.send({
+            error: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
+    }
+
+    await mqttClient.end();
+    await client.close();
+});
+
+router.delete('/', verifyHeaders, async (req, res) => {
+
+    try {
+        const client = await createMongoDBClient();
+        const col = client.db("orchestra").collection('automation');
+    
+        var objectIds = [];
+        for (let i in req.body.ids) {
+            objectIds.push(ObjectId(req.body.ids[i]));
+        }
+    
+        await col.deleteMany({ _id: { $in: objectIds} });
+    
+        res.send({
+            error: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            error
+        });
+    }
+
+    await client.close();
 });
 
 module.exports = router;

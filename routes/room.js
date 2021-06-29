@@ -7,7 +7,7 @@ const {
 
 const { verifyHeaders } = require('../middleware/token_verification');
 
-router.get('/all', verifyHeaders, async function(req, res, next) {
+router.get('/all', verifyHeaders, async (req, res) => {
     try {
         const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('room');
@@ -22,9 +22,11 @@ router.get('/all', verifyHeaders, async function(req, res, next) {
             error: err
         });
     }
+
+    await client.close();
 });
 
-router.post('/', verifyHeaders, async function(req, res, next) {
+router.post('/', verifyHeaders, async (req, res) => {
     try {
         const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('room');
@@ -39,6 +41,8 @@ router.post('/', verifyHeaders, async function(req, res, next) {
             error: err
         });
     }
+
+    await client.close();
 });
 
 module.exports = router;

@@ -7,12 +7,16 @@ function launchUpdate(update) {
 
 setInterval(
     async function() {
-        var needsUpdate = false;
-        launchUpdate(needsUpdate);
-        const file = fs.readFileSync('/orchestra-api/update.txt', 'utf8');
-        var splittedFile = file.split('\n');
-        if (!splittedFile[1].includes('is up to date')) {
-            needsUpdate = true;
+        try {
+            var needsUpdate = false;
             launchUpdate(needsUpdate);
+            const file = fs.readFileSync('/orchestra-api/update.txt', 'utf8');
+            var splittedFile = file.split('\n');
+            if (!splittedFile[1].includes('is up to date')) {
+                needsUpdate = true;
+                launchUpdate(needsUpdate);
+            }
+        } catch (error) {
+            console.error(error);
         }
     }, 60000);
