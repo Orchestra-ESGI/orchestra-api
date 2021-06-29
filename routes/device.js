@@ -65,15 +65,14 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
             devices[index].is_complete = true;
             timer = createTimer(devices, res, mqttClient);
+
+            await client.close();
         });
     } catch (error) {
         res.status(500).send({
             error
         });
     }
-
-    await mqttClient.end();
-    await client.close();
 });
 
 router.get('/supported', async (req, res) => {
@@ -104,7 +103,8 @@ router.patch('/', verifyHeaders, async (req, res) => {
                 }
             }
         );
-    
+
+        await client.close();
         res.send({
             error: null
         });
@@ -113,8 +113,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
             error
         });
     }
-
-    await client.close();
 });
 
 router.post('/reset', verifyHeaders, async (req, res) => {
@@ -169,8 +167,7 @@ router.delete('/', verifyHeaders, async (req, res) => {
             await mqttClient.publish("zigbee2mqtt/bridge/request/device/remove", JSON.stringify(removePayload));
         }
     
-        await sceneCol.updateMany(
-            {},
+        await sceneCol.updateMany({},
             { 
                 $pull: { 
                     "devices": { 
@@ -183,6 +180,9 @@ router.delete('/', verifyHeaders, async (req, res) => {
         );
     
         await col.deleteMany({ friendly_name: { $in: req.body.friendly_names } });
+
+        await mqttClient.end();
+        await client.close();
     
         res.send({
             error: null
@@ -192,9 +192,6 @@ router.delete('/', verifyHeaders, async (req, res) => {
             error
         });
     }
-
-    await mqttClient.end();
-    await client.close();
 });
 
 module.exports = router;
