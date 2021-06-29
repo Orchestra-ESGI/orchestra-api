@@ -17,6 +17,9 @@ const {
 
     var subbedTopic = await automationCol.find().toArray();
     subbedTopic.forEach(async (element) => {
+        console.log("ORCHESTRA - AUTOMATIONS - ");
+        console.log(element.trigger);
+        console.log(element.trigger.friendly_name);
         await mqttClient.subscribe('zigbee2mqtt/' + element.target.friendly_name);
     });
 
@@ -56,7 +59,7 @@ const {
                 if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                     switch (element.trigger.type) {
                         case "occupancy":
-                            if (parsedMessage.occupancy === element.trigger.state) {
+                            if (parsedMessage.occupancy === element.trigger.action.state) {
                                 for (let i in element.targets) {
                                     await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets.actions));
                                 }
