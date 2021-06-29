@@ -9,6 +9,7 @@ var usersRouter = require('./routes/user');
 var sceneRouter = require('./routes/scene');
 var roomRouter = require('./routes/room');
 var deviceRouter = require('./routes/device');
+var automationRouter = require('./routes/automation');
 
 const swaggerUi = require('swagger-ui-express'), swaggerDocument = require('./swagger.json');
 
@@ -23,6 +24,7 @@ app.use('/user', usersRouter);
 app.use('/device', deviceRouter);
 app.use('/scene', sceneRouter);
 app.use('/room', roomRouter);
+app.use('/automation', automationRouter);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 module.exports = app;
