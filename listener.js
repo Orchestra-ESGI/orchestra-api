@@ -17,10 +17,7 @@ const {
 
     var subbedTopic = await automationCol.find().toArray();
     subbedTopic.forEach(async (element) => {
-        console.log("ORCHESTRA - AUTOMATIONS - ");
-        console.log(element.trigger);
-        console.log(element.trigger.friendly_name);
-        await mqttClient.subscribe('zigbee2mqtt/' + element.target.friendly_name);
+        await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
     });
 
     //Called twice dunno why ???????
@@ -53,9 +50,6 @@ const {
         } else {
             const automations = await automationCol.find().toArray();
             automations.forEach(async (element) => {
-                console.log("ORCHESTRA - AUTOMATIONS - ");
-                console.log(element.trigger);
-                console.log(element.trigger.friendly_name);
                 if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                     switch (element.trigger.type) {
                         case "occupancy":
