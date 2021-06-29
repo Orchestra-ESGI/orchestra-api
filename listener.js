@@ -51,15 +51,11 @@ const {
             const automations = await automationCol.find().toArray();
             automations.forEach(async (element) => {
                 if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
-                    console.log("ORCHESTRA - Listener - topic validate");
                     switch (element.trigger.type) {
                         case "occupancy":
-                            console.log("ORCHESTRA - Listener - type validate");
                             if (parsedMessage.occupancy === element.trigger.action.state) {
                                 for (let i in element.targets) {
-                                    console.log("ORCHESTRA - Listener - publishing actions...");
-                                    console.log(element);
-                                    await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets.actions));
+                                    await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                 }
                             }
                             break;
