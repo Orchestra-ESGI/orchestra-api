@@ -50,6 +50,9 @@ const {
         } else {
             const automations = await automationCol.find().toArray();
             automations.forEach(async (element) => {
+                console.log("ORCHESTRA - AUTOMATIONS - ");
+                console.log(element.trigger);
+                console.log(element.trigger.friendly_name);
                 if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                     switch (element.trigger.type) {
                         case "occupancy":
