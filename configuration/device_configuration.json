@@ -6,7 +6,7 @@
                     "state": "on",
                     "brightness": {
                         "min_val": 0,
-                        "max_val": 150
+                        "max_val": 255
                     },
                     "color_temp": {
                         "min_val": 150,
@@ -21,7 +21,7 @@
                 "state": "on",
                 "brightness": {
                     "min_val": 0,
-                    "max_val": 150
+                    "max_val": 255
                 }
             }
         },
@@ -30,7 +30,7 @@
                 "state": "on",
                 "brightness": {
                     "min_val": 0,
-                    "max_val": 150
+                    "max_val": 255
                 },
                 "color_temp": {
                     "min_val": 150,
