@@ -48,5 +48,12 @@
                 "state": "on"
             }
         }
+    },
+    "occupancy": {
+        "SONOFF": {
+            "actions": {
+                "state": true
+            }
+        }
     }
 }
