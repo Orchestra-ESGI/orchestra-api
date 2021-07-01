@@ -10,7 +10,7 @@ const nodemailer = require('nodemailer');
 const fs = require('fs');
 const clientOpts = {
     username: "pi",
-    password: "orchestrapi",
+    password: "nassimpi",
     clientId: "API"
 }
 const transporter = nodemailer.createTransport({
