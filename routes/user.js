@@ -142,6 +142,7 @@ router.get('/verify', async (req, res, next) => {
                     await col.deleteOne(
                         { _id: ObjectId(req.query.id) }
                     );
+                    await client.close();
                     res.status(401).send({ error: 'Le lien a expiré ! Merci de vous réinscrire !' });
                 } else {
                     await col.updateOne(
@@ -152,7 +153,7 @@ router.get('/verify', async (req, res, next) => {
                             }
                         }
                     );
-
+                    await client.close();
                     res.status(200).send({
                         error: null
                     })
@@ -163,7 +164,6 @@ router.get('/verify', async (req, res, next) => {
                 error: 'Aucun token d\'authentification n\'a été fourni'
             });
         }
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
