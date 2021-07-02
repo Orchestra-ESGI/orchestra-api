@@ -34,7 +34,7 @@ const {
                                 console.log("Orchestra - Adding a new device to db");
                                 var type = getType(parsedMessage[i]);
                                 var color = getHasColor(parsedMessage[i]);
-                                var values = (type === "occupancy" || "contact") ? getOnAndOffValues(parsedMessage[i]) : [];
+                                var values = (type === "occupancy" || type === "contact") ? getOnAndOffValues(parsedMessage[i]) : [];
                                 var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
                                 var insertDevice = {
                                     "type": type,
