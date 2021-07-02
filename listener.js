@@ -108,7 +108,8 @@ const {
                                 const switchTrigger = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
                                 if (switchTrigger.length != 0) {
                                     const switchValues = switchTrigger[0].switch_values;
-                                    var filteredResult = switchValues.filter(element => element.orchestra_key === element.trigger.actions.state);
+                                    console.log("Orchestra - Programmable Switch element");
+                                    var filteredResult = switchValues.filter(value => value.orchestra_key === element.trigger.actions.state);
                                     if (filteredResult.length !== 0) {
                                         var val = filteredResult[0].zigbee_key;
                                         console.log("Orchestra - Programmable Switch val");
