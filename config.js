@@ -109,21 +109,15 @@ function getHasColor(json) {
     return color;
 }
 
-function getOnAndOffValues(json) {
+function getOnAndOffValues(type, json) {
     var values = [];
     try {
         if (json.definition) {
-            const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+            const rawActionConf = fs.readFileSync('./configuration/device_configuration.json');
             const actionConf = JSON.parse(rawActionConf);
-            for (let i in actionConf) {
-                if (actionConf[i].brand === json.definition.vendor) {
-                    for (let j in actionConf[i].devices) {
-                        if (actionConf[i].devices[j].model === json.definition.model) {
-                            values.push(actionConf[i].devices[j].onValue);
-                            values.push(actionConf[i].devices[j].offValue);
-                        }
-                    }
-                }
+            if (actionConf[json.definition.type] && actionConf[json.definition.type][json.definition.vendor]) {
+                values.push(actionConf[json.definition.type][json.definition.vendor].onValue);
+                values.push(actionConf[json.definition.type][json.definition.vendor].offValue);
             }
         }
     } catch (error) {
