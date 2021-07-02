@@ -52,8 +52,10 @@
     "occupancy": {
         "SONOFF": {
             "actions": {
-                "state": true
-            }
+                "state": "on"
+            },
+            "onValue": true,
+            "offValue": false
         }
     }
 }

@@ -2,7 +2,8 @@ const {
     createMongoDBClient,
     createMqttClient,
     getType,
-    getHasColor
+    getHasColor,
+    getOnAndOffValues
 } = require('./config');
 
 (async function newDeviceListener() {
@@ -33,6 +34,7 @@ const {
                                 console.log("Orchestra - Adding a new device to db");
                                 var type = getType(parsedMessage[i]);
                                 var color = getHasColor(parsedMessage[i]);
+                                var values = (type === "occupancy") ? getOnAndOffValues(parsedMessage[i]) : [];
                                 var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
                                 var insertDevice = {
                                     "type": type,
@@ -45,6 +47,11 @@ const {
                                 }
                                 if (type === "lightbulb") {
                                     insertDevice["color"] = color
+                                }
+
+                                if (type === "occupancy") {
+                                    insertDevice["onValue"] = values[0];
+                                    insertDevice["offValue"] = values[1];
                                 }
                                 console.log("Orchestra - Inserting this payload in db");
                                 console.log(insertDevice);
@@ -59,7 +66,15 @@ const {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                         switch (element.trigger.type) {
                             case "occupancy":
-                                if (parsedMessage.occupancy === element.trigger.actions.state) {
+                                var val;
+                                if (element.trigger.actions.state == "on") {
+                                    val = element.trigger.onValue;
+                                } else {
+                                    val = element.trigger.offValue;
+                                }
+                                console.log("Orchestra - sensor val");
+                                console.log(val);
+                                if (parsedMessage.occupancy === val) {
                                     for (let i in element.targets) {
                                         await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                     }

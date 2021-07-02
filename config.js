@@ -109,6 +109,30 @@ function getHasColor(json) {
     return color;
 }
 
+function getOnAndOffValues(json) {
+    var values = [];
+    try {
+        if (json.definition) {
+            const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+            const actionConf = JSON.parse(rawActionConf);
+            for (let i in actionConf) {
+                if (actionConf[i].brand === json.definition.vendor) {
+                    for (let j in actionConf[i].devices) {
+                        if (actionConf[i].devices[j].model === json.definition.model) {
+                            values.push(actionConf[i].devices[j].onValue);
+                            values.push(actionConf[i].devices[j].offValue);
+                        }
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    return values;
+}
+
 module.exports = {
     ObjectId,
     JWT_KEY,
@@ -120,5 +144,6 @@ module.exports = {
     getHasColor,
     createMongoDBClient,
     createMqttClient,
-    createTimer
+    createTimer,
+    getOnAndOffValues
 };
