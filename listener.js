@@ -24,6 +24,12 @@ const {
 
         //Called twice dunno why ???????
         mqttClient.on('message', async (topic, message) => {
+
+            var subbedTopic = await automationCol.find().toArray();
+            subbedTopic.forEach(async (element) => {
+                await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
+            });
+            
             var parsedMessage = JSON.parse(message.toString());
             if (topic === mqttTopic) {
                 for(let i in parsedMessage) {
