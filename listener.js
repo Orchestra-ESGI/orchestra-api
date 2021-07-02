@@ -66,6 +66,8 @@ const {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                         switch (element.trigger.type) {
                             case "occupancy":
+                                console.log("Orchestra - Occupancy automation");
+                                console.log(element);
                                 var val = element.trigger.onValue;
                                 if (element.trigger.actions.state == "on") {
                                     val = element.trigger.onValue;
