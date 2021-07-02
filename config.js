@@ -133,6 +133,29 @@ function getOnAndOffValues(json) {
     return values;
 }
 
+function getProgrammableSwitchValues(json) {
+    var values = [];
+    try {
+        if (json.definition) {
+            const rawActionConf = fs.readFileSync('./configuration/supported_device.json');
+            const actionConf = JSON.parse(rawActionConf);
+            for (let i in actionConf) {
+                if (actionConf[i].brand === json.definition.vendor) {
+                    for (let j in actionConf[i].devices) {
+                        if (actionConf[i].devices[j].model === json.definition.model) {
+                            values = actionConf[i].devices[j].switch_values;
+                        }
+                    }
+                }
+            }
+        }
+    } catch (error) {
+        console.error(error);
+    }
+
+    return values;
+}
+
 module.exports = {
     ObjectId,
     JWT_KEY,
@@ -145,5 +168,6 @@ module.exports = {
     createMongoDBClient,
     createMqttClient,
     createTimer,
-    getOnAndOffValues
+    getOnAndOffValues,
+    getProgrammableSwitchValues
 };

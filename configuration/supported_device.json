@@ -48,6 +48,27 @@
                 "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-04.html#pairing",
                 "onValue": true,
                 "offValue": false
+            },
+            {
+                "type": "programmableswitch",
+                "name": "Wireless button",
+                "model": "SNZB-01",
+                "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-01.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-01.html#pairing",
+                "switch_values": [
+                    {
+                        "orchestra_key": "single",
+                        "zigbee_key": "single"
+                    },
+                    {
+                        "orchestra_key": "double",
+                        "zigbee_key": "double"
+                    },
+                    {
+                        "orchestra_key": "long",
+                        "zigbee_key": "long"
+                    }
+                ]
             }
         ]
     },

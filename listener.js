@@ -3,7 +3,8 @@ const {
     createMqttClient,
     getType,
     getHasColor,
-    getOnAndOffValues
+    getOnAndOffValues,
+    getProgrammableSwitchValues
 } = require('./config');
 
 (async function newDeviceListener() {
@@ -40,7 +41,12 @@ const {
                                 console.log("Orchestra - Adding a new device to db");
                                 var type = getType(parsedMessage[i]);
                                 var color = getHasColor(parsedMessage[i]);
-                                var values = (type === "occupancy" || type === "contact") ? getOnAndOffValues(parsedMessage[i]) : [];
+                                var values = [];
+                                if (type === "occupancy" || type === "contact") {
+                                    values = getOnAndOffValues(parsedMessage[i]);
+                                } else if (type === "programmableswitch") {
+                                    values = getProgrammableSwitchValues(parsedMessage[i]);
+                                }
                                 var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
                                 var insertDevice = {
                                     "type": type,
@@ -58,6 +64,10 @@ const {
                                 if (type === "occupancy" || type === "contact") {
                                     insertDevice["onValue"] = values[0];
                                     insertDevice["offValue"] = values[1];
+                                }
+
+                                if (type === "programmableswitch") {
+                                    insertDevice["switch_values"] = values
                                 }
                                 console.log("Orchestra - Inserting this payload in db");
                                 console.log(insertDevice);
@@ -92,6 +102,27 @@ const {
                                         }
                                     }
                                 }
+                                break;
+                            case "programmableswitch":
+                                console.log("Orchestra - Programmable Switch automation");
+                                const switchTrigger = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
+                                if (switchTrigger.length != 0) {
+                                    const switchValues = switchTrigger[0].switch_values;
+                                    var filteredResult = switchValues.filter(element => element.orchestra_key === element.trigger.actions.state);
+                                    if (filteredResult.length !== 0) {
+                                        var val = filteredResult[0].zigbee_key;
+                                        console.log("Orchestra - Programmable Switch val");
+                                        console.log(element);
+                                        console.log(val);
+                                        console.log(parsedMessage);
+                                        if (parsedMessage[action] === val) {
+                                            for (let i in element.targets) {
+                                                await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
                         }
                     }
                 });
