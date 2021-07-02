@@ -55,5 +55,12 @@
                 "state": "on"
             }
         }
+    },
+    "contact": {
+        "SONOFF": {
+            "actions": {
+                "state": "on"
+            }
+        }
     }
 }
