@@ -38,7 +38,7 @@ router.post('/', verifyHeaders, async (req, res) => {
     
         await col.insertOne(req.body);
     
-        await mqttClient.subscribe('zigbee2mqtt/' + req.body.target.friendly_name);
+        await mqttClient.subscribe('zigbee2mqtt/' + req.body.trigger.friendly_name);
 
         await mqttClient.end();
         await client.close();
