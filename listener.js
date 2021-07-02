@@ -49,7 +49,7 @@ const {
                                     insertDevice["color"] = color
                                 }
 
-                                if (type === "occupancy") {
+                                if (type === "occupancy" || type === "contact") {
                                     insertDevice["onValue"] = values[0];
                                     insertDevice["offValue"] = values[1];
                                 }
