@@ -77,6 +77,7 @@ const {
                                         val = triggerDevice[0].offValue;
                                     }
                                     console.log("Orchestra - sensor val");
+                                    console.log(element);
                                     console.log(val);
                                     console.log(parsedMessage);
                                     if (parsedMessage[element.trigger.type] === val) {
