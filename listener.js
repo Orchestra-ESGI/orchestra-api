@@ -30,6 +30,7 @@ const {
                         var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
                         if (device.length === 0) {
                             if (parsedMessage[i].definition) {
+                                console.log("Orchestra - Adding a new device to db");
                                 var type = getType(parsedMessage[i]);
                                 var color = getHasColor(parsedMessage[i]);
                                 var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
@@ -43,6 +44,8 @@ const {
                                     "model": parsedMessage[i].definition.model,
                                     "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
                                 }
+                                console.log("Orchestra - Inserting this payload in db");
+                                console.log(insertDevice);
                                 await col.insertOne(insertDevice);
                             }
                         }
