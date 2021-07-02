@@ -88,7 +88,7 @@ router.post('/:id', verifyHeaders, async (req, res) => {
         const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
-        let results = await col.find({ _id: ObjectId(req.params.id)}).toArray();
+        let results = await col.find({ _id: ObjectId(req.params.id) }).toArray();
     
         if (results.length === 0) {
             res.send({
@@ -99,7 +99,7 @@ router.post('/:id', verifyHeaders, async (req, res) => {
     
         const mqttClient = await createMqttClient();
         for (let i in results[0].targets) {
-            await mqttClient.publish('zigbee2mqtt/' + results[0].devices[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
+            await mqttClient.publish('zigbee2mqtt/' + results[0].targets[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
         }
 
         await mqttClient.end();
