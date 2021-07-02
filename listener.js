@@ -38,11 +38,13 @@ const {
                                     "type": type,
                                     "name": parsedMessage[i].definition.description,
                                     "friendly_name": parsedMessage[i].friendly_name,
-                                    "color": color,
                                     "room_id": room[0]._id,
                                     "manufacturer": parsedMessage[i].definition.vendor,
                                     "model": parsedMessage[i].definition.model,
                                     "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
+                                }
+                                if (type === "lightbulb") {
+                                    insertDevice["color"] = color
                                 }
                                 console.log("Orchestra - Inserting this payload in db");
                                 console.log(insertDevice);
