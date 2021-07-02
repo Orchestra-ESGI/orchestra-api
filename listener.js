@@ -67,21 +67,23 @@ const {
                         switch (element.trigger.type) {
                             case "occupancy":
                                 console.log("Orchestra - Occupancy automation");
-                                console.log(element);
-                                var val = element.trigger.onValue;
-                                if (element.trigger.actions.state == "on") {
-                                    val = element.trigger.onValue;
-                                } else {
-                                    val = element.trigger.offValue;
-                                }
-                                console.log("Orchestra - sensor val");
-                                console.log(val);
-                                if (parsedMessage.occupancy === val) {
-                                    for (let i in element.targets) {
-                                        await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
+                                if (triggerDevice.length != 0) {
+                                    var val = triggerDevice.onValue;
+                                    if (element.trigger.actions.state == "on") {
+                                        val = triggerDevice.onValue;
+                                    } else {
+                                        val = triggerDevice.offValue;
                                     }
+                                    console.log("Orchestra - sensor val");
+                                    console.log(val);
+                                    if (parsedMessage.occupancy === val) {
+                                        for (let i in element.targets) {
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                        }
+                                    }
+                                    break;
                                 }
-                                break;
                         }
                     }
                 });
