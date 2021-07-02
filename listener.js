@@ -66,6 +66,7 @@ const {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                         switch (element.trigger.type) {
                             case "contact":
+                            case "occupancy":
                                 console.log("Orchestra - Occupancy automation");
                                 const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
                                 if (triggerDevice.length != 0) {
@@ -78,7 +79,7 @@ const {
                                     console.log("Orchestra - sensor val");
                                     console.log(val);
                                     console.log(parsedMessage);
-                                    if (parsedMessage.occupancy === val) {
+                                    if (parsedMessage[element.trigger.type] === val) {
                                         for (let i in element.targets) {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
