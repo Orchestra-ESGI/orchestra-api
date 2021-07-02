@@ -14,6 +14,7 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
+        console.log("Orchestra - Getting all devices...");
         const client = await createMongoDBClient();
         const mqttClient = await createMqttClient();
     
@@ -34,6 +35,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 devices[i]["is_complete"] = false;
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
+                console.log("Orchestra - All devices (not complete)");
+                console.log(devices);
                 await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
                 await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
             }
@@ -56,7 +59,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                             devices[index].actions.color.hex = "#FF0000";
                             devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                         }
-                        
                         break;
                     case 'switch':
                         devices[index].actions.state = parsedMessage.state.toLowerCase();
@@ -64,7 +66,9 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 }
             }
 
+            console.log("Orchestra - Completing devices...");
             devices[index].is_complete = true;
+            console.log(devices);
             timer = createTimer(devices, res, mqttClient);
         });
     } catch (error) {
