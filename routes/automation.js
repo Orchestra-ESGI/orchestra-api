@@ -118,14 +118,21 @@ router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
         const client = await createMongoDBClient();
+        const mqttClient = await createMqttClient();
         const col = client.db("orchestra").collection('automation');
     
         var objectIds = [];
         for (let i in req.body.ids) {
-            objectIds.push(ObjectId(req.body.ids[i]));
+            var newObjectId = ObjectId(req.body.ids[i]);
+            objectIds.push(newObjectId);
+            let res = await col.find({ _id: newObjectId }).toArray();
+            if (res.length != 0) {
+                await mqttClient.unsubscribe('zigbee2mqtt/' + res[0].trigger.friendly_name);
+            }
         }
     
         await col.deleteMany({ _id: { $in: objectIds} });
+        await mqttClient.end();
         await client.close();
         
         res.send({
