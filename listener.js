@@ -116,7 +116,7 @@ const {
                                         console.log(element);
                                         console.log(val);
                                         console.log(parsedMessage);
-                                        if (parsedMessage[action] === val) {
+                                        if (parsedMessage["action"] === val) {
                                             for (let i in element.targets) {
                                                 await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                             }
