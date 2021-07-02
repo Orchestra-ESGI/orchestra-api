@@ -66,7 +66,7 @@ const {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                         switch (element.trigger.type) {
                             case "occupancy":
-                                var val;
+                                var val = element.trigger.onValue;
                                 if (element.trigger.actions.state == "on") {
                                     val = element.trigger.onValue;
                                 } else {

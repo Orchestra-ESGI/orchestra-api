@@ -53,9 +53,7 @@
         "SONOFF": {
             "actions": {
                 "state": "on"
-            },
-            "onValue": true,
-            "offValue": false
+            }
         }
     }
 }

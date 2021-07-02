@@ -36,7 +36,9 @@
                 "name": "Motion sensor",
                 "model": "SNZB-03",
                 "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-03.jpg",
-                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-03.html#pairing"
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-03.html#pairing",
+                "onValue": true,
+                "offValue": false
             }
         ]
     },
