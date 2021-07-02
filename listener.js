@@ -80,9 +80,8 @@ const {
                 const automations = await automationCol.find().toArray();
                 automations.forEach(async (element) => {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
-                        switch (element.trigger.type) {
-                            case "contact":
-                            case "occupancy":
+                        if (element.trigger.type === "contact" ||
+                            element.trigger.type === "occupancy") {
                                 console.log("Orchestra - Occupancy automation");
                                 const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
                                 if (triggerDevice.length != 0) {
@@ -102,12 +101,11 @@ const {
                                         }
                                     }
                                 }
-                                break;
-                            case "programmableswitch":
+                            } else if (element.trigger.type === "programmableswitch") {
                                 console.log("Orchestra - Programmable Switch automation");
-                                const switchTrigger = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
-                                if (switchTrigger.length != 0) {
-                                    const switchValues = switchTrigger[0].switch_values;
+                                const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
+                                if (triggerDevice.length != 0) {
+                                    const switchValues = triggerDevice[0].switch_values;
                                     console.log("Orchestra - Programmable Switch element");
                                     var filteredResult = switchValues.filter(value => value.orchestra_key === element.trigger.actions.state);
                                     if (filteredResult.length !== 0) {
@@ -123,8 +121,7 @@ const {
                                         }
                                     }
                                 }
-                                break;
-                        }
+                            }
                     }
                 });
             }
