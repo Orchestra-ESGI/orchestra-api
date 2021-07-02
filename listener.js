@@ -69,11 +69,11 @@ const {
                                 console.log("Orchestra - Occupancy automation");
                                 const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
                                 if (triggerDevice.length != 0) {
-                                    var val = triggerDevice.onValue;
+                                    var val = triggerDevice[0].onValue;
                                     if (element.trigger.actions.state == "on") {
-                                        val = triggerDevice.onValue;
+                                        val = triggerDevice[0].onValue;
                                     } else {
-                                        val = triggerDevice.offValue;
+                                        val = triggerDevice[0].offValue;
                                     }
                                     console.log("Orchestra - sensor val");
                                     console.log(val);
