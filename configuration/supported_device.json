@@ -39,6 +39,15 @@
                 "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-03.html#pairing",
                 "onValue": true,
                 "offValue": false
+            },
+            {
+                "type": "contact",
+                "name": "Contact sensor",
+                "model": "SNZB-04",
+                "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-04.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-04.html#pairing",
+                "onValue": true,
+                "offValue": false
             }
         ]
     },

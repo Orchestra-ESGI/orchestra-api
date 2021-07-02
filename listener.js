@@ -34,7 +34,7 @@ const {
                                 console.log("Orchestra - Adding a new device to db");
                                 var type = getType(parsedMessage[i]);
                                 var color = getHasColor(parsedMessage[i]);
-                                var values = (type === "occupancy") ? getOnAndOffValues(parsedMessage[i]) : [];
+                                var values = (type === "occupancy" || "contact") ? getOnAndOffValues(parsedMessage[i]) : [];
                                 var room = await client.db("orchestra").collection('room').find({ name: "Living room" }).toArray();
                                 var insertDevice = {
                                     "type": type,
@@ -65,7 +65,7 @@ const {
                 automations.forEach(async (element) => {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
                         switch (element.trigger.type) {
-                            case "occupancy":
+                            case "occupancy" || "contact":
                                 console.log("Orchestra - Occupancy automation");
                                 const triggerDevice = await col.find({ friendly_name: element.trigger.friendly_name }).toArray();
                                 if (triggerDevice.length != 0) {
@@ -83,8 +83,8 @@ const {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                     }
-                                    break;
                                 }
+                                break;
                         }
                     }
                 });
