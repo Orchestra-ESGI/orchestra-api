@@ -20,6 +20,11 @@ const transporter = nodemailer.createTransport({
         pass: 'GSr6Dw&6$Qj7#2'
     }
 });
+const admin = require("firebase-admin");
+const serviceAccount = require("./firebase-credentials.json");
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 
 
 async function createMqttClient() {
@@ -169,5 +174,6 @@ module.exports = {
     createMqttClient,
     createTimer,
     getOnAndOffValues,
-    getProgrammableSwitchValues
+    getProgrammableSwitchValues,
+    admin
 };
