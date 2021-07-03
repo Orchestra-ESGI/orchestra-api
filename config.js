@@ -46,6 +46,7 @@ async function createMongoDBClient() {
 }
 
 async function sendNotification(title, message) {
+    const client = await createMqttClient();
     const tokens = await client.db("orchestra").collection("fcm").find().toArray();
     const registratedTokens = tokens.map(elem => elem.token);
     const notification = {
@@ -64,6 +65,7 @@ async function sendNotification(title, message) {
     }).catch( error => {
         console.log(error);
     });
+    await client.close();
 }
 
 function createTimer(devices, res, client) {
