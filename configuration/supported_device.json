@@ -104,6 +104,27 @@
                 "documentation": "https://www.zigbee2mqtt.io/devices/RTCGQ01LM.html#pairing",
                 "onValue": true,
                 "offValue": false
+            },
+            {
+                "type": "programmableswitch",
+                "name": "MiJia wireless switch",
+                "model": "WXKG01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/WXKG01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/WXKG01LM.html#pairing",
+                "switch_values": [
+                    {
+                        "orchestra_key": "single",
+                        "zigbee_key": "single"
+                    },
+                    {
+                        "orchestra_key": "double",
+                        "zigbee_key": "double"
+                    },
+                    {
+                        "orchestra_key": "long",
+                        "zigbee_key": "hold"
+                    }
+                ]
             }
         ]
     }
