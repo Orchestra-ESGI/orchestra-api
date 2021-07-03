@@ -45,6 +45,27 @@ async function createMongoDBClient() {
     }
 }
 
+async function sendNotification(title, message) {
+    const tokens = await client.db("orchestra").collection("fcm").find().toArray();
+    const registratedTokens = tokens.map(elem => elem.token);
+    const notification = {
+        notification: {
+            title: title,
+            body: message
+        }
+    };
+    const options = {
+        priority: "high",
+        timeToLive: 60 * 60 * 24
+      };
+
+    admin.messaging().sendToDevice(registratedTokens, notification, options).then( response => {
+        console.log("Notification sent successfully");
+    }).catch( error => {
+        console.log(error);
+    });
+}
+
 function createTimer(devices, res, client) {
     return setTimeout(async () => {
         try {
@@ -175,5 +196,5 @@ module.exports = {
     createTimer,
     getOnAndOffValues,
     getProgrammableSwitchValues,
-    admin
+    sendNotification
 };

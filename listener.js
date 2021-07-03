@@ -4,7 +4,8 @@ const {
     getType,
     getHasColor,
     getOnAndOffValues,
-    getProgrammableSwitchValues
+    getProgrammableSwitchValues,
+    sendNotification
 } = require('./config');
 
 (async function newDeviceListener() {
@@ -99,6 +100,9 @@ const {
                                         for (let i in element.targets) {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
+                                        if (element.notify) {
+                                            await sendNotification("Uh oh", element.name + " has been launched");
+                                        }
                                     }
                                 }
                             } else if (element.trigger.type === "temperature" || element.trigger.type === "humidity") {
@@ -113,11 +117,17 @@ const {
                                         for (let i in element.targets) {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
+                                        if (element.notify) {
+                                            await sendNotification("Uh oh", element.name + " has been launched");
+                                        }
                                     }
                                 } else if (element.trigger.actions.operator === "lt") {
                                     if (parsedMessage[element.trigger.type] <= val) {
                                         for (let i in element.targets) {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                        }
+                                        if (element.notify) {
+                                            await sendNotification("Uh oh", element.name + " has been launched");
                                         }
                                     }
                                 }
@@ -137,6 +147,9 @@ const {
                                         if (parsedMessage["action"] === val) {
                                             for (let i in element.targets) {
                                                 await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            }
+                                            if (element.notify) {
+                                                await sendNotification("Uh oh", element.name + " has been launched");
                                             }
                                         }
                                     }

@@ -5,6 +5,7 @@ const {
     ObjectId,
     createMqttClient,
     createMongoDBClient,
+    sendNotification
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
@@ -65,6 +66,7 @@ router.patch('/', verifyHeaders, async (req, res) => {
                     name: req.body.name,
                     color: req.body.color,
                     description: req.body.description,
+                    notify: req.body.notify,
                     trigger: req.body.trigger,
                     targets: req.body.targets
                 }
@@ -100,6 +102,10 @@ router.post('/:id', verifyHeaders, async (req, res) => {
         const mqttClient = await createMqttClient();
         for (let i in results[0].targets) {
             await mqttClient.publish('zigbee2mqtt/' + results[0].targets[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
+        }
+
+        if (results[0].notify) {
+            await sendNotification("Uh oh", results[0].name + " has been launched");
         }
 
         await mqttClient.end();

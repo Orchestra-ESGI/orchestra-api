@@ -100,24 +100,7 @@ router.post('/:id', verifyHeaders, async (req, res) => {
         }
 
         if (results[0].notify) {
-            const tokens = await client.db("orchestra").collection("fcm").find().toArray();
-            const registratedTokens = tokens.map(elem => elem.token);
-            const message = {
-                notification: {
-                    title: "Uh oh",
-                    body: results[0].name + " has been launched"
-                }
-            };
-            const options = {
-                priority: "high",
-                timeToLive: 60 * 60 * 24
-              };
-
-            admin.messaging().sendToDevice(registratedTokens, message, options).then( response => {
-                console.log("Notification sent successfully");
-            }).catch( error => {
-                console.log(error);
-            });
+            await sendNotification("Uh oh", results[0].name + " has been launched");
         }
 
         await mqttClient.end();
