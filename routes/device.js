@@ -22,8 +22,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
     
         var devices = await col.find().toArray();
         let rawActionConf = fs.readFileSync('./configuration/device_configuration.json');
-        let actionConf = JSON.parse(rawActionConf);
         console.log(devices);
+        let actionConf = JSON.parse(rawActionConf);
     
         for (let i in devices) {
             if (devices[i].type !== "unknown") {
