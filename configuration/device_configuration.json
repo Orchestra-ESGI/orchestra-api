@@ -71,6 +71,11 @@
             "actions": {
                 "state": "on"
             }
+        },
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
         }
     },
     "programmableswitch": {

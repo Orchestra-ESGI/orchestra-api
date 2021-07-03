@@ -106,6 +106,15 @@
                 "offValue": false
             },
             {
+                "type": "contact",
+                "name": "MiJia door & window contact sensor",
+                "model": "MCCGQ01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/MCCGQ01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/MCCGQ01LM.html#pairing",
+                "onValue": true,
+                "offValue": false
+            },
+            {
                 "type": "programmableswitch",
                 "name": "MiJia wireless switch",
                 "model": "WXKG01LM",
