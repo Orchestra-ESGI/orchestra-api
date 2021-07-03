@@ -22,15 +22,12 @@ router.get('/all', verifyHeaders, async (req, res) => {
     
         var devices = await col.find().toArray();
         let rawActionConf = fs.readFileSync('./configuration/device_configuration.json');
-        console.log(devices);
         let actionConf = JSON.parse(rawActionConf);
     
         for (let i in devices) {
             if (devices[i].type !== "unknown") {
                 const roomCol = client.db("orchestra").collection('room');
                 let room = await roomCol.find({ _id: ObjectId(devices[i].room_id) }).toArray();
-                console.log("Orchestra - Get all: room");
-                console.log(room);
                 if (room.length !== 0) {
                     devices[i]["room"] = room[0];
                 }
@@ -38,7 +35,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 devices[i]["is_complete"] = false;
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
-                console.log(devices[i]);
                 console.log("Orchestra - All devices (not complete)");
                 console.log(devices);
                 await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
