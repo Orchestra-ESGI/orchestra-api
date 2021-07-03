@@ -32,7 +32,7 @@ router.post('/', async (req, res) => {
         const col = client.db("orchestra").collection('fcm');
 
         const result = await col.find({ token: req.body.token }).toArray();
-        if (result.length !== 0) {
+        if (result.length == 0) {
             await col.insertOne(req.body);
         }
         await client.close();
