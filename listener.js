@@ -52,7 +52,7 @@ const {
                                     "type": type,
                                     "name": parsedMessage[i].definition.description,
                                     "friendly_name": parsedMessage[i].friendly_name,
-                                    "room_id": parseString(room[0]._id),
+                                    "room_id": String(room[0]._id),
                                     "manufacturer": parsedMessage[i].definition.vendor,
                                     "model": parsedMessage[i].definition.model,
                                     "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
