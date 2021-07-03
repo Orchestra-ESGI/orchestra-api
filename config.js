@@ -77,6 +77,8 @@ function createTimer(devices, res, client) {
             }
             await client.end();
             
+            console.log("Sending response :");
+            console.log(devices);
             res.send({
                 devices: devices,
                 error: null
