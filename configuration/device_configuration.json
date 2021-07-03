@@ -91,7 +91,7 @@
         }
     },
     "temperatureandhumidity": {
-        "Xiaomi": {
+        "Xiaomi": {
             "actions": {
                 "state": "on"
             }
