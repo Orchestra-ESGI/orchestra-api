@@ -52,7 +52,7 @@ const {
                                     "type": type,
                                     "name": parsedMessage[i].definition.description,
                                     "friendly_name": parsedMessage[i].friendly_name,
-                                    "room_id": room[0]._id,
+                                    "room_id": parseString(room[0]._id),
                                     "manufacturer": parsedMessage[i].definition.vendor,
                                     "model": parsedMessage[i].definition.model,
                                     "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
@@ -96,6 +96,26 @@ const {
                                     console.log(val);
                                     console.log(parsedMessage);
                                     if (parsedMessage[element.trigger.type] === val) {
+                                        for (let i in element.targets) {
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                        }
+                                    }
+                                }
+                            } else if (element.trigger.type === "temperature" || element.trigger.type === "humidity") {
+                                console.log("Orchestra - Temperature or Humidity automation");
+                                var val = parseFloat(element.trigger.actions.state);
+                                console.log("Orchestra - sensor val");
+                                console.log(element);
+                                console.log(val);
+                                console.log(parsedMessage);
+                                if (element.trigger.actions.operator === "gt") {
+                                    if (parsedMessage[element.trigger.type] >= val) {
+                                        for (let i in element.targets) {
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                        }
+                                    }
+                                } else if (element.trigger.actions.operator === "lt") {
+                                    if (parsedMessage[element.trigger.type] <= val) {
                                         for (let i in element.targets) {
                                             await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }

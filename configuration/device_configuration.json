@@ -89,5 +89,12 @@
                 "state": "on"
             }
         }
+    },
+    "temperatureandhumidity": {
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
+        }
     }
 }

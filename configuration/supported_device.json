@@ -115,6 +115,13 @@
                 "offValue": false
             },
             {
+                "type": "temperatureandhumidity",
+                "name": "MiJia temperature & humidity sensor",
+                "model": "WSDCGQ01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/WSDCGQ01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/WSDCGQ01LM.html#pairing"
+            },
+            {
                 "type": "programmableswitch",
                 "name": "MiJia wireless switch",
                 "model": "WXKG01LM",
