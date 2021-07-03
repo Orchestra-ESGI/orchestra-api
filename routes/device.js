@@ -32,9 +32,15 @@ router.get('/all', verifyHeaders, async (req, res) => {
                     devices[i]["room"] = room[0];
                 }
                 let action = actionConf[devices[i].type][devices[i].manufacturer];
+                console.log("Orchestra - debugging device - action");
+                console.log(action);
                 devices[i]["is_complete"] = false;
+                console.log("Orchestra - debugging device - isComplete");
+                console.log(devices[i]);
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
+                console.log("Orchestra - debugging device - actions");
+                console.log(devices[i]);
                 console.log("Orchestra - All devices (not complete)");
                 console.log(devices);
                 await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
@@ -47,6 +53,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
         mqttClient.on('message', async (topic, message) => {
             clearTimeout(timer);
+            console.log("Receive device response");
             let parsedMessage = JSON.parse(message.toString());
             let friendlyName = topic.split('/')[1];
             let index = devices.findIndex(device => device.friendly_name === friendlyName);
