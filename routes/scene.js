@@ -62,6 +62,7 @@ router.patch('/', verifyHeaders, async (req, res) => {
                     name: req.body.name,
                     color: req.body.color,
                     description: req.body.description,
+                    notify: req.body.notify,
                     devices: req.body.devices
                 }
             }
