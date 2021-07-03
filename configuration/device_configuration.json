@@ -54,6 +54,11 @@
             "actions": {
                 "state": "on"
             }
+        },
+        "Philips": {
+            "actions": {
+                "state": "on"
+            }
         }
     },
     "contact": {

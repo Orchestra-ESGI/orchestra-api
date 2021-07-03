@@ -25,6 +25,15 @@
                 "model": "9290022166",
                 "image": "https://www.zigbee2mqtt.io/images/devices/9290022166.jpg",
                 "documentation": null
+            },
+            {
+                "type": "occupancy",
+                "name": "Hue motion sensor",
+                "model": "9290012607",
+                "image": "https://www.zigbee2mqtt.io/images/devices/9290012607.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/9290012607.html#pairing",
+                "onValue": true,
+                "offValue": false
             }
         ]
     },
