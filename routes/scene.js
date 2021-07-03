@@ -5,7 +5,7 @@ const {
     ObjectId,
     createMqttClient,
     createMongoDBClient,
-    admin
+    sendNotification
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
