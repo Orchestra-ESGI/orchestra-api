@@ -54,29 +54,31 @@ router.get('/all', verifyHeaders, async (req, res) => {
         newMqttClient.on('message', async (topic, message) => {
             console.log("TOPIC");
             console.log(topic);
-            for (let i in devices) {
-                if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
-                    if (!devices[i].is_complete) {
-                        console.log(devices[i].friendly_name);
+            const friendlyName = topic.split('/');
+            const index = devices.findIndex(elem => elem.friendly_name === friendlyName);
+            if (index !== -1) {
+                if (topic === 'zigbee2mqtt/' + devices[index].friendly_name) {
+                    if (!devices[index].is_complete) {
+                        console.log(devices[index].friendly_name);
                         clearTimeout(timer);
                         let parsedMessage = JSON.parse(message.toString());
-                        if (devices[i]["is_complete"] === false) {
-                            switch(devices[i].type) {
+                        if (devices[index]["is_complete"] === false) {
+                            switch(devices[index].type) {
                                 case 'lightbulb':
-                                    devices[i].actions.state = parsedMessage.state.toLowerCase();
-                                    devices[i].actions.brightness["current_state"] = parsedMessage.brightness;
-                                    if (devices[i].color) {
-                                        devices[i].actions.color.hex = "#FF0000";
-                                        devices[i].actions.color_temp["current_state"] = parsedMessage.color_temp;
+                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
+                                    devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
+                                    if (devices[index].color) {
+                                        devices[index].actions.color.hex = "#FF0000";
+                                        devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
                                     }
                                     break;
                                 case 'switch':
-                                    devices[i].actions.state = parsedMessage.state.toLowerCase();
+                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
                                     break;
                             }
                         }
-    
-                        devices[i].is_complete = true;
+                        await newMqttClient.unsubscribe(topic);
+                        devices[index].is_complete = true;
                         timer = await createTimer(devices, res, newMqttClient);
                     }
                 }
