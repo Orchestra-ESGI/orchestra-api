@@ -46,7 +46,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             } else {
                 clearInterval(interval);
             }
-        }, 100);
+        }, 50);
     
         for (let i in devices) {
             if (devices[i].type !== "unknown") {
