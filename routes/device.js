@@ -80,7 +80,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             console.log("Orchestra - Completing devices...");
             devices[index].is_complete = true;
             console.log(devices);
-            timer = await createTimer(devices, res, mqttClient);
+            //timer = await createTimer(devices, res, mqttClient);
         });
     } catch (error) {
         console.log("ERROR 500 - CATCHED");

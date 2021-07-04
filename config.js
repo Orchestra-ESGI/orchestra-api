@@ -79,7 +79,7 @@ async function createTimer(devices, res, client) {
         }
         
         return;
-    }, 3000);
+    }, 6000);
 }
 
 function getType(json) {
