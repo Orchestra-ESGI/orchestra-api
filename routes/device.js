@@ -42,9 +42,9 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 devices[i]["is_complete"] = false;
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
-                if (devices[i].type !== "occupancy" || devices[i].type !== "contact" ||
-                    devices[i].type !== "programmableswitch" || devices[i].type !== "temperatureandhumidity" ||
-                    devices[i].type !== "temperature" || devices[i].type !== "humidity") {
+                if (devices[i].type !== "occupancy" && devices[i].type !== "contact" &&
+                    devices[i].type !== "programmableswitch" && devices[i].type !== "temperatureandhumidity" &&
+                    devices[i].type !== "temperature" && devices[i].type !== "humidity") {
                         console.log("SUBSCRIBING TOPIC");
                         console.log(devices[i].friendly_name);
                         await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
