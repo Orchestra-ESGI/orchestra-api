@@ -60,7 +60,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
                     let friendlyName = topic.split('/')[1];
                     let index = devices.findIndex(device => device.friendly_name === friendlyName);
-                    if (!device[index].is_complete) {
+                    if (!devices[index].is_complete) {
                         clearTimeout(timer);
                         console.log("Receive device response");
                         let parsedMessage = JSON.parse(message.toString());
