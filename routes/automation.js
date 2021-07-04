@@ -18,7 +18,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
     
         let results = await col.find().toArray();
 
-        await client.close();
         res.status(200).send({
             automations: results,
             error: null
@@ -41,8 +40,6 @@ router.post('/', verifyHeaders, async (req, res) => {
     
         await mqttClient.subscribe('zigbee2mqtt/' + req.body.trigger.friendly_name);
 
-        await mqttClient.end();
-        await client.close();
         res.send({
             error: null
         });
@@ -73,7 +70,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
             }
         ); 
         
-        await client.close();
         res.send({
             error: null
         });
@@ -108,8 +104,6 @@ router.post('/:id', verifyHeaders, async (req, res) => {
             await sendNotification("Uh oh", results[0].name + " has been launched");
         }
 
-        await mqttClient.end();
-        await client.close();
         res.send({
             error: null
         });
@@ -138,8 +132,6 @@ router.delete('/', verifyHeaders, async (req, res) => {
         }
     
         await col.deleteMany({ _id: { $in: objectIds} });
-        await mqttClient.end();
-        await client.close();
         
         res.send({
             error: null

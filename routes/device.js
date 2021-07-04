@@ -55,7 +55,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
         }
     
         var timer = createTimer(devices, res, mqttClient);
-        await client.close();
 
         mqttClient.on('message', async (topic, message) => {
             clearTimeout(timer);
@@ -120,7 +119,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
             }
         );
 
-        await client.close();
         res.send({
             error: null
         });
@@ -136,7 +134,6 @@ router.post('/reset', verifyHeaders, async (req, res) => {
     try {
         const mqttClient = await createMqttClient();
         await mqttClient.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
-        await mqttClient.end();
 
         res.send({
             error: null
@@ -153,7 +150,6 @@ router.post('/action', verifyHeaders, async (req, res) => {
     try {
         const mqttClient = await createMqttClient();
         await mqttClient.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
-        await mqttClient.end();
 
         res.send({
             error: null
@@ -197,8 +193,6 @@ router.delete('/', verifyHeaders, async (req, res) => {
     
         await col.deleteMany({ friendly_name: { $in: req.body.friendly_names } });
 
-        await mqttClient.end();
-        await client.close();
         res.send({
             error: null
         });

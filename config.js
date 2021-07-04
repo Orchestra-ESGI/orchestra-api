@@ -65,7 +65,6 @@ async function sendNotification(title, message) {
     }).catch( error => {
         console.log(error);
     });
-    await client.close();
 }
 
 function createTimer(devices, res, client) {
@@ -75,7 +74,6 @@ function createTimer(devices, res, client) {
                 devices[i]["is_reachable"] = devices[i]['is_complete'];
                 delete devices[i]['is_complete'];
             }
-            await client.end();
             
             console.log("Sending response :");
             console.log(devices);

@@ -13,7 +13,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('fcm');
     
         let fcm_tokens = await col.find({}).toArray();
-        await client.close();
         
         res.status(200).send({
             fcm_tokens,
@@ -35,7 +34,6 @@ router.post('/', async (req, res) => {
         if (result.length == 0) {
             await col.insertOne(req.body);
         }
-        await client.close();
 
         res.status(200).send({
             error: null

@@ -19,7 +19,6 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
         const col = client.db("orchestra").collection('user');
     
         let results = await col.find({}).project({ password: 0 }).toArray();
-        await client.close();
         
         res.send({
             results,
@@ -85,7 +84,6 @@ router.post('/signup', async (req, res, next) => {
                 }
             });
         }
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
@@ -122,7 +120,6 @@ router.post('/login', async (req, res, next) => {
                 error: 'Cet identifiant ou mot de passe est inconnu'
             });
         }
-        await client.close();
     } catch (error) {
         res.status(500).send({
             error
@@ -142,7 +139,6 @@ router.get('/verify', async (req, res, next) => {
                     await col.deleteOne(
                         { _id: ObjectId(req.query.id) }
                     );
-                    await client.close();
                     res.status(401).send({ error: 'Le lien a expiré ! Merci de vous réinscrire !' });
                 } else {
                     await col.updateOne(
@@ -153,7 +149,6 @@ router.get('/verify', async (req, res, next) => {
                             }
                         }
                     );
-                    await client.close();
                     res.status(200).send({
                         error: null
                     })
@@ -177,7 +172,6 @@ router.delete('/', async (req, res, next) => {
         const client = await createMongoDBClient();
         const col = client.db("orchestra").collection("user");
         await col.deleteOne({ email: req.body.email });
-        await client.close();
 
         res.status(200).send({
             error: null
