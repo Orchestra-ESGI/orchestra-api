@@ -41,6 +41,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 if (devices[i].type !== "occupancy" || devices[i].type !== "contact" ||
                     devices[i].type !== "programmableswitch" || devices[i].type !== "temperatureandhumidity" ||
                     devices[i].type !== "temperature" || devices[i].type !== "humidity") {
+                        console.log("SUBSCRIBING TOPIC");
+                        console.log(devices[i].friendly_name);
                         await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
                         await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
                     }
