@@ -65,6 +65,7 @@ async function createTimer(devices, res, client) {
             
             console.log("Sending response :");
             console.log(devices);
+            console.log("just before crash?");
             res.send({
                 devices,
                 error: null
