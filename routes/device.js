@@ -47,13 +47,15 @@ router.get('/all', verifyHeaders, async (req, res) => {
                     devices[i].type !== "temperature" && devices[i].type !== "humidity") {
                         console.log("SUBSCRIBING TOPIC");
                         console.log(devices[i].friendly_name);
-                        await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-                        await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
-                        await sleep(1000);
+                        setInterval(async () => {
+                            await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
+                            await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                        }, 100)
                     }
             }
         }
     
+        await sleep(3000);
         var timer = await createTimer(devices, res, newMqttClient);
 
         newMqttClient.on('message', async (topic, message) => {
