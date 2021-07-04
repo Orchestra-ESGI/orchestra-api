@@ -53,7 +53,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             }
         }
     
-        var timer = await createTimer(devices, res, mqttClient);
+        
 
         mqttClient.on('message', async (topic, message) => {
             clearTimeout(timer);
@@ -82,6 +82,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
             console.log(devices);
             //timer = await createTimer(devices, res, mqttClient);
         });
+
+        var timer = await createTimer(devices, res, mqttClient);
     } catch (error) {
         console.log("ERROR 500 - CATCHED");
         console.log(error)
