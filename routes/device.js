@@ -35,17 +35,9 @@ router.get('/all', verifyHeaders, async (req, res) => {
                     devices[i]["room"] = room[0];
                 }
                 let action = actionConf[devices[i].type][devices[i].manufacturer];
-                console.log("Orchestra - debugging device - action");
-                console.log(action);
                 devices[i]["is_complete"] = false;
-                console.log("Orchestra - debugging device - isComplete");
-                console.log(devices[i]);
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
-                console.log("Orchestra - debugging device - actions");
-                console.log(devices[i]);
-                console.log("Orchestra - All devices (not complete)");
-                console.log(devices);
                 if (devices[i].type !== "occupancy" || devices[i].type !== "contact" ||
                     devices[i].type !== "programmableswitch" || devices[i].type !== "temperatureandhumidity" ||
                     devices[i].type !== "temperature" || devices[i].type !== "humidity") {
@@ -61,8 +53,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
             for (let i in devices) {
                 if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
                     if (!devices[i].is_complete) {
+                        console.log(devices[i].friendly_name);
                         clearTimeout(timer);
-                        console.log("Receive device response");
                         let parsedMessage = JSON.parse(message.toString());
                         if (devices[i]["is_complete"] === false) {
                             switch(devices[i].type) {
@@ -80,9 +72,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                             }
                         }
     
-                        console.log("Orchestra - Completing devices...");
                         devices[i].is_complete = true;
-                        console.log(devices);
                         timer = await createTimer(devices, res, newMqttClient);
                     }
                 }
