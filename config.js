@@ -28,6 +28,11 @@ admin.initializeApp({
 const mqttClient = mqtt.connect(BROKERURL, clientOpts);
 const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
+function createMqttClient() {
+    const mqttClient = mqtt.connect(BROKERURL, clientOpts);
+    return mqttClient;
+}
+
 async function connectMongoClient() {
     await client.connect();
 };
@@ -54,8 +59,8 @@ async function sendNotification(title, message) {
     });
 }
 
-function createTimer(devices, res) {
-    return setTimeout(() => {
+async function createTimer(devices, res, mqttClient) {
+    return setTimeout(async () => {
         try {
             console.log("Orchestra - TIMER");
             for (let i in devices) {
@@ -65,7 +70,7 @@ function createTimer(devices, res) {
             
             console.log("Sending response :");
             console.log(devices);
-            console.log("just before crash?");
+            await mqttClient.end();
             res.send({
                 devices,
                 error: null
@@ -190,5 +195,6 @@ module.exports = {
     sendNotification,
     mqttClient,
     client,
-    connectMongoClient
+    connectMongoClient,
+    createMqttClient
 };

@@ -5,9 +5,11 @@ const {
     ObjectId,
     client,
     mqttClient,
+    createMqttClient,
     createTimer,
     fs,
-    connectMongoClient
+    connectMongoClient,
+    createMqttClient
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
@@ -15,6 +17,7 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
+        const newMqttClient = createMqttClient();
         console.log("Orchestra - Getting all devices...");
         await connectMongoClient();
         const col = client.db("orchestra").collection('device');
@@ -47,35 +50,33 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 if (devices[i].type !== "occupancy" || devices[i].type !== "contact" ||
                     devices[i].type !== "programmableswitch" || devices[i].type !== "temperatureandhumidity" ||
                     devices[i].type !== "temperature" || devices[i].type !== "humidity") {
-                        await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-                        await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                        await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
+                        await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
                     }
             }
         }
     
-        var timer = createTimer(devices, res);
+        var timer = await createTimer(devices, res, newMqttClient);
 
-        mqttClient.on('message', async (topic, message) => {
+        newMqttClient.on('message', async (topic, message) => {
             for (let i in devices) {
                 if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
-                    let friendlyName = topic.split('/')[1];
-                    let index = devices.findIndex(device => device.friendly_name === friendlyName);
-                    if (!devices[index].is_complete) {
+                    if (!devices[i].is_complete) {
                         clearTimeout(timer);
                         console.log("Receive device response");
                         let parsedMessage = JSON.parse(message.toString());
-                        if (devices[index]["is_complete"] === false) {
-                            switch(devices[index].type) {
+                        if (devices[i]["is_complete"] === false) {
+                            switch(devices[i].type) {
                                 case 'lightbulb':
-                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
-                                    devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
-                                    if (devices[index].color) {
-                                        devices[index].actions.color.hex = "#FF0000";
-                                        devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
+                                    devices[i].actions.state = parsedMessage.state.toLowerCase();
+                                    devices[i].actions.brightness["current_state"] = parsedMessage.brightness;
+                                    if (devices[i].color) {
+                                        devices[i].actions.color.hex = "#FF0000";
+                                        devices[i].actions.color_temp["current_state"] = parsedMessage.color_temp;
                                     }
                                     break;
                                 case 'switch':
-                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
+                                    devices[i].actions.state = parsedMessage.state.toLowerCase();
                                     break;
                             }
                         }
@@ -83,7 +84,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                         console.log("Orchestra - Completing devices...");
                         devices[index].is_complete = true;
                         console.log(devices);
-                        timer = createTimer(devices, res);
+                        timer = await createTimer(devices, res, newMqttClient);
                     }
                 }
             }
