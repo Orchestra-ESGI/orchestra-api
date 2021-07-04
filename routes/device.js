@@ -127,8 +127,7 @@ router.patch('/', verifyHeaders, async (req, res) => {
             {
                 $set: { 
                     name: req.body.name,
-                    room_id: req.body.room._id,
-                    background_color: req.body.background_color
+                    room_id: req.body.room._id
                 }
             }
         );

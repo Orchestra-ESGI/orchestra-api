@@ -56,7 +56,7 @@ const {
                                     "room_id": String(room[0]._id),
                                     "manufacturer": parsedMessage[i].definition.vendor,
                                     "model": parsedMessage[i].definition.model,
-                                    "background_color": type === "unknown" ? "#FF0000" : "#00FF00"
+                                    "background_color": type === "unknown" ? "#D12B31" : "#41464D"
                                 }
                                 if (type === "lightbulb") {
                                     insertDevice["color"] = color

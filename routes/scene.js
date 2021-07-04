@@ -36,7 +36,9 @@ router.post('/', verifyHeaders, async (req, res) => {
         await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
     
-        await col.insertOne(req.body);
+        var body = req.body;
+        body.background_color = "#41464D";
+        await col.insertOne(body);
 
         res.send({
             error: null
@@ -59,7 +61,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
             {
                 $set: {
                     name: req.body.name,
-                    color: req.body.color,
                     description: req.body.description,
                     notify: req.body.notify,
                     devices: req.body.devices
