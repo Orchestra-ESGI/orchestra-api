@@ -57,6 +57,7 @@ async function sendNotification(title, message) {
 async function createTimer(devices, res, client) {
     return setTimeout(async () => {
         try {
+            console.log("Orchestra - TIMER");
             for (let i in devices) {
                 devices[i]["is_reachable"] = devices[i]['is_complete'];
                 delete devices[i]['is_complete'];
