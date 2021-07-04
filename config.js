@@ -29,8 +29,7 @@ const mqttClient = mqtt.connect(BROKERURL, clientOpts);
 const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
 
 function createMqttClient() {
-    const mqttClient = mqtt.connect(BROKERURL, clientOpts);
-    return mqttClient;
+    return mqtt.connect(BROKERURL, clientOpts);
 }
 
 async function connectMongoClient() {

@@ -16,7 +16,7 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
-        const newMqttClient = createMqttClient();
+        var newMqttClient = createMqttClient();
         console.log("Orchestra - Getting all devices...");
         await connectMongoClient();
         const col = client.db("orchestra").collection('device');
@@ -43,8 +43,10 @@ router.get('/all', verifyHeaders, async (req, res) => {
                     devices[i].type !== "temperature" || devices[i].type !== "humidity") {
                         console.log("SUBSCRIBING TOPIC");
                         console.log(devices[i].friendly_name);
-                        await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-                        await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                        setInterval(async () => {
+                            await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
+                            await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                        }, 3000);
                     }
             }
         }
