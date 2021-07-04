@@ -70,6 +70,8 @@ async function createTimer(devices, res, client) {
                 error: null
             });
         } catch (error) {
+            console.log("TIMER ERROR");
+            console.log(error);
             res.status(500).send({
                 error
             });
