@@ -84,7 +84,7 @@ async function createTimer(devices, res, mqttClient) {
         }
         
         return;
-    }, 3000);
+    }, 9000);
 }
 
 function getType(json) {
