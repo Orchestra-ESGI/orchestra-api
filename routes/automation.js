@@ -3,7 +3,7 @@ var router = express.Router();
 
 const {
     ObjectId,
-    createMongoDBClient,
+    client,
     mqttClient,
     sendNotification
 } = require('../config');
@@ -13,7 +13,6 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
         let results = await col.find().toArray();
@@ -32,7 +31,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
 router.post('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
         await col.insertOne(req.body);
@@ -52,7 +50,6 @@ router.post('/', verifyHeaders, async (req, res) => {
 router.patch('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
         await col.updateOne(
@@ -82,7 +79,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
 router.post('/:id', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
         let results = await col.find({ _id: ObjectId(req.params.id) }).toArray();
@@ -115,7 +111,6 @@ router.post('/:id', verifyHeaders, async (req, res) => {
 router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('automation');
     
         var objectIds = [];

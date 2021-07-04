@@ -26,19 +26,12 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 const mqttClient = mqtt.connect(BROKERURL, clientOpts);
-
-async function createMongoDBClient() {
-    try {
-        const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-        await client.connect();
-        return client;
-    } catch (error) {
-        console.error(error);
-    }
-}
+const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
+(async () => {
+    await client.connect();
+})();
 
 async function sendNotification(title, message) {
-    const client = await createMongoDBClient();
     const tokens = await client.db("orchestra").collection("fcm").find().toArray();
     const registratedTokens = tokens.map(elem => elem.token);
     const notification = {
@@ -185,10 +178,10 @@ module.exports = {
     transporter,
     getType,
     getHasColor,
-    createMongoDBClient,
     createTimer,
     getOnAndOffValues,
     getProgrammableSwitchValues,
     sendNotification,
-    mqttClient
+    mqttClient,
+    client
 };

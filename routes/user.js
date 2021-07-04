@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 const validator = require('validator');
 const {
-    createMongoDBClient,
+    client,
     JWT_KEY,
     jwt,
     transporter,
@@ -15,7 +15,6 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async function (req, res, next) {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection('user');
     
         let results = await col.find({}).project({ password: 0 }).toArray();
@@ -34,7 +33,6 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
 router.post('/signup', async (req, res, next) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection("user");
     
         //INSERT ONE DOCUMENT
@@ -95,7 +93,6 @@ router.post('/signup', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection("user");
 
         var result = await col.find({ email: req.body.email, password: req.body.password, is_verified: true }).toArray();
@@ -130,7 +127,6 @@ router.post('/login', async (req, res, next) => {
 router.get('/verify', async (req, res, next) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection("user");
 
         if (req.query.token && req.query.id) {
@@ -169,7 +165,6 @@ router.get('/verify', async (req, res, next) => {
 router.delete('/', async (req, res, next) => {
 
     try {
-        const client = await createMongoDBClient();
         const col = client.db("orchestra").collection("user");
         await col.deleteOne({ email: req.body.email });
 
