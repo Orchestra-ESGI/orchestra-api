@@ -84,6 +84,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                                     break;
                             }
                         }
+                        console.log("UNSUB TOPIC");
                         await newMqttClient.unsubscribe(topic);
                         devices[index].is_complete = true;
                         timer = await createTimer(devices, res, newMqttClient);
