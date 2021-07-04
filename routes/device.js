@@ -43,8 +43,12 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 console.log(devices[i]);
                 console.log("Orchestra - All devices (not complete)");
                 console.log(devices);
-                await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-                await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                if (devices[i].type !== "occupancy" || devices[i].type !== "contact" ||
+                    devices[i].type !== "programmableswitch" || devices[i].type !== "temperatureandhumidity" ||
+                    devices[i].type !== "temperature" || devices[i].type !== "humidity") {
+                        await mqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
+                        await mqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                    }
             }
         }
     
