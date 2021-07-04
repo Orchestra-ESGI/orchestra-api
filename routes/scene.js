@@ -4,8 +4,9 @@ var router = express.Router();
 const {
     ObjectId,
     mqttClient,
-    createMongoDBClient,
-    sendNotification
+    client,
+    sendNotification,
+    connectMongoClient
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
@@ -13,7 +14,7 @@ const { verifyHeaders } = require('../middleware/token_verification');
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
     
         let results = await col.find().toArray();
@@ -32,7 +33,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
 router.post('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
     
         await col.insertOne(req.body);
@@ -50,7 +51,7 @@ router.post('/', verifyHeaders, async (req, res) => {
 router.patch('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
 
         await col.updateOne(
@@ -79,7 +80,7 @@ router.patch('/', verifyHeaders, async (req, res) => {
 router.post('/:id', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
 
         let results = await col.find({ _id: ObjectId(req.params.id)}).toArray();
@@ -112,7 +113,7 @@ router.post('/:id', verifyHeaders, async (req, res) => {
 router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('scene');
     
         var objectIds = [];

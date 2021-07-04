@@ -3,13 +3,14 @@ const {
     APP_KEY,
     jwt,
     ObjectId,
-    createMongoDBClient
+    client,
+    connectMongoClient
 } = require('../config');
 
 async function verifyHeaders(req, res, next) {
 
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('user');
 
         var appKey = req.get('App-Key');

@@ -5,11 +5,13 @@ const {
     getHasColor,
     getOnAndOffValues,
     getProgrammableSwitchValues,
-    sendNotification
+    sendNotification,
+    connectMongoClient
 } = require('./config');
 
 (async function newDeviceListener() {
     try {
+        await connectMongoClient();
         const col = client.db("orchestra").collection('device');
         const automationCol = client.db('orchestra').collection('automation');
         await col.createIndex({ friendly_name: 1 }, { unique: true } );

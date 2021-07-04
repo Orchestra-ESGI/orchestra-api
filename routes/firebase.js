@@ -2,14 +2,15 @@ var express = require('express');
 var router = express.Router();
 
 const {
-    createMongoDBClient,
+    client,
+    connectMongoClient
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
 
 router.get('/all', verifyHeaders, async (req, res) => {
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('fcm');
     
         let fcm_tokens = await col.find({}).toArray();
@@ -27,7 +28,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
 router.post('/', async (req, res) => {
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('fcm');
 
         const result = await col.find({ token: req.body.token }).toArray();

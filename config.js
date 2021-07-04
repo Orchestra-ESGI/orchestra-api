@@ -27,11 +27,13 @@ admin.initializeApp({
 });
 const mqttClient = mqtt.connect(BROKERURL, clientOpts);
 const client = new MongoClient(MONGODBURL, { useNewUrlParser: true, useUnifiedTopology: true });
-(async () => {
+
+async function connectMongoClient() {
     await client.connect();
-})();
+};
 
 async function sendNotification(title, message) {
+    await connectMongoClient();
     const tokens = await client.db("orchestra").collection("fcm").find().toArray();
     const registratedTokens = tokens.map(elem => elem.token);
     const notification = {
@@ -183,5 +185,6 @@ module.exports = {
     getProgrammableSwitchValues,
     sendNotification,
     mqttClient,
-    client
+    client,
+    connectMongoClient
 };

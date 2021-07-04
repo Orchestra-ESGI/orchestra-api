@@ -3,10 +3,11 @@ var router = express.Router();
 
 const {
     ObjectId,
-    createMongoDBClient,
+    client,
     mqttClient,
     createTimer,
-    fs
+    fs,
+    connectMongoClient
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
@@ -15,8 +16,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
         console.log("Orchestra - Getting all devices...");
-        const client = await createMongoDBClient();
-    
+        await connectMongoClient();
         const col = client.db("orchestra").collection('device');
     
         var devices = await col.find().toArray();
@@ -106,7 +106,7 @@ router.get('/supported', async (req, res) => {
 
 router.patch('/', verifyHeaders, async (req, res) => {
     try {
-        const client = await createMongoDBClient();
+        await connectMongoClient();
         const col = client.db("orchestra").collection('device');
     
         await col.updateOne(
@@ -163,8 +163,7 @@ router.post('/action', verifyHeaders, async (req, res) => {
 router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
-        const client = await createMongoDBClient();
-    
+        await connectMongoClient();
         const col = client.db("orchestra").collection('device');
         const sceneCol = client.db("orchestra").collection('scene');
     
