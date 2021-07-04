@@ -67,7 +67,7 @@ async function sendNotification(title, message) {
     });
 }
 
-function createTimer(devices, res, client) {
+async function createTimer(devices, res, client) {
     return setTimeout(async () => {
         try {
             for (let i in devices) {
@@ -78,7 +78,7 @@ function createTimer(devices, res, client) {
             console.log("Sending response :");
             console.log(devices);
             res.send({
-                devices: devices,
+                devices,
                 error: null
             });
         } catch (error) {

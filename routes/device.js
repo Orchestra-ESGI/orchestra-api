@@ -54,7 +54,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             }
         }
     
-        var timer = createTimer(devices, res, mqttClient);
+        var timer = await createTimer(devices, res, mqttClient);
 
         mqttClient.on('message', async (topic, message) => {
             clearTimeout(timer);
@@ -81,7 +81,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             console.log("Orchestra - Completing devices...");
             devices[index].is_complete = true;
             console.log(devices);
-            timer = createTimer(devices, res, mqttClient);
+            timer = await createTimer(devices, res, mqttClient);
         });
     } catch (error) {
         res.status(500).send({
