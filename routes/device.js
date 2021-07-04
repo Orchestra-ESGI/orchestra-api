@@ -81,7 +81,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                         }
     
                         console.log("Orchestra - Completing devices...");
-                        devices[index].is_complete = true;
+                        devices[i].is_complete = true;
                         console.log(devices);
                         timer = await createTimer(devices, res, newMqttClient);
                     }
