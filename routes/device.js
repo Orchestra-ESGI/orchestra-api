@@ -62,7 +62,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
             }
         }
 
-        console.log("CREATING TIMER");
         var timer = await createTimer(devices, res, newMqttClient);
 
         newMqttClient.on('message', async (topic, message) => {
@@ -72,7 +71,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 if (topic === 'zigbee2mqtt/' + devices[index].friendly_name) {
                     if (!devices[index].is_complete) {
                         console.log(devices[index].friendly_name);
-                        console.log("CLEARING TIMER");
                         clearTimeout(timer);
                         let parsedMessage = JSON.parse(message.toString());
                         if (devices[index]["is_complete"] === false) {
@@ -90,10 +88,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
                                     break;
                             }
                         }
-                        console.log("UNSUB TOPIC");
                         await newMqttClient.unsubscribe(topic);
                         devices[index].is_complete = true;
-                        console.log("CREATING NEW TIMER !");
                         timer = await createTimer(devices, res, newMqttClient);
                     }
                 }
