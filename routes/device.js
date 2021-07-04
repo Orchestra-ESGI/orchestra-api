@@ -63,6 +63,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
             console.log(topic);
             const friendlyName = topic.split('/');
             const index = devices.findIndex(elem => elem.friendly_name === friendlyName);
+            console.log(index);
             if (index !== -1) {
                 if (topic === 'zigbee2mqtt/' + devices[index].friendly_name) {
                     if (!devices[index].is_complete) {
