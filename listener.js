@@ -1,6 +1,6 @@
 const {
     createMongoDBClient,
-    createMqttClient,
+    mqttClient,
     getType,
     getHasColor,
     getOnAndOffValues,
@@ -11,7 +11,6 @@ const {
 (async function newDeviceListener() {
     try {
         const client = await createMongoDBClient();
-        const mqttClient = await createMqttClient();
         const col = client.db("orchestra").collection('device');
         const automationCol = client.db('orchestra').collection('automation');
         await col.createIndex({ friendly_name: 1 }, { unique: true } );

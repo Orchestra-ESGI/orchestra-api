@@ -3,8 +3,8 @@ var router = express.Router();
 
 const {
     ObjectId,
-    createMqttClient,
     createMongoDBClient,
+    mqttClient,
     sendNotification
 } = require('../config');
 
@@ -33,7 +33,6 @@ router.post('/', verifyHeaders, async (req, res) => {
 
     try {
         const client = await createMongoDBClient();
-        const mqttClient = await createMqttClient();
         const col = client.db("orchestra").collection('automation');
     
         await col.insertOne(req.body);
@@ -95,7 +94,6 @@ router.post('/:id', verifyHeaders, async (req, res) => {
             return;
         }
     
-        const mqttClient = await createMqttClient();
         for (let i in results[0].targets) {
             await mqttClient.publish('zigbee2mqtt/' + results[0].targets[i].friendly_name + '/set', JSON.stringify(results[0].targets[i].actions));
         }
@@ -118,7 +116,6 @@ router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
         const client = await createMongoDBClient();
-        const mqttClient = await createMqttClient();
         const col = client.db("orchestra").collection('automation');
     
         var objectIds = [];

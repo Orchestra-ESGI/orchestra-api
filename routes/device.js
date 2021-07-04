@@ -4,7 +4,7 @@ var router = express.Router();
 const {
     ObjectId,
     createMongoDBClient,
-    createMqttClient,
+    mqttClient,
     createTimer,
     fs
 } = require('../config');
@@ -16,7 +16,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
     try {
         console.log("Orchestra - Getting all devices...");
         const client = await createMongoDBClient();
-        const mqttClient = await createMqttClient();
     
         const col = client.db("orchestra").collection('device');
     
@@ -134,7 +133,6 @@ router.patch('/', verifyHeaders, async (req, res) => {
 router.post('/reset', verifyHeaders, async (req, res) => {
     
     try {
-        const mqttClient = await createMqttClient();
         await mqttClient.publish('zigbee2mqtt/bridge/request/touchlink/factory_reset', '');
 
         res.send({
@@ -150,7 +148,6 @@ router.post('/reset', verifyHeaders, async (req, res) => {
 router.post('/action', verifyHeaders, async (req, res) => {
 
     try {
-        const mqttClient = await createMqttClient();
         await mqttClient.publish("zigbee2mqtt/" + req.body.friendly_name + "/set", JSON.stringify(req.body.actions));
 
         res.send({
@@ -167,7 +164,6 @@ router.delete('/', verifyHeaders, async (req, res) => {
 
     try {
         const client = await createMongoDBClient();
-        const mqttClient = await createMqttClient();
     
         const col = client.db("orchestra").collection('device');
         const sceneCol = client.db("orchestra").collection('scene');

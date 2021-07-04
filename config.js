@@ -25,15 +25,7 @@ const serviceAccount = require("./firebase-credentials.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
-
-
-async function createMqttClient() {
-    try {
-        return mqtt.connect(BROKERURL, clientOpts);
-    } catch (error) {
-        return error
-    }
-}
+const mqttClient = mqtt.connect(BROKERURL, clientOpts);
 
 async function createMongoDBClient() {
     try {
@@ -194,9 +186,9 @@ module.exports = {
     getType,
     getHasColor,
     createMongoDBClient,
-    createMqttClient,
     createTimer,
     getOnAndOffValues,
     getProgrammableSwitchValues,
-    sendNotification
+    sendNotification,
+    mqttClient
 };

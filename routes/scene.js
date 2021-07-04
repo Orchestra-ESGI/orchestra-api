@@ -3,7 +3,7 @@ var router = express.Router();
 
 const {
     ObjectId,
-    createMqttClient,
+    mqttClient,
     createMongoDBClient,
     sendNotification
 } = require('../config');
@@ -91,7 +91,6 @@ router.post('/:id', verifyHeaders, async (req, res) => {
             return;
         }
 
-        const mqttClient = await createMqttClient();
         for (let i in results[0].devices) {
             await mqttClient.publish('zigbee2mqtt/' + results[0].devices[i].friendly_name + '/set', JSON.stringify(results[0].devices[i].actions));
         }
