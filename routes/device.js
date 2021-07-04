@@ -50,12 +50,11 @@ router.get('/all', verifyHeaders, async (req, res) => {
                         setInterval(async () => {
                             await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
                             await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
-                        }, 100)
+                        }, 100);
                     }
             }
         }
-    
-        await sleep(3000);
+
         var timer = await createTimer(devices, res, newMqttClient);
 
         newMqttClient.on('message', async (topic, message) => {
@@ -63,9 +62,10 @@ router.get('/all', verifyHeaders, async (req, res) => {
             console.log(topic);
             const friendlyName = topic.split('/');
             const index = devices.findIndex(elem => elem.friendly_name === friendlyName[1]);
-            console.log(index);
             if (index !== -1) {
                 if (topic === 'zigbee2mqtt/' + devices[index].friendly_name) {
+                    console.log("DEVICE - IS COMPLETE");
+                    console.log(devices[index].is_complete);
                     if (!devices[index].is_complete) {
                         console.log(devices[index].friendly_name);
                         clearTimeout(timer);
