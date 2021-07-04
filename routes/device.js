@@ -53,34 +53,40 @@ router.get('/all', verifyHeaders, async (req, res) => {
             }
         }
     
-        var timer = createTimer(devices, res, mqttClient);
+        var timer = createTimer(devices, res);
 
         mqttClient.on('message', async (topic, message) => {
-            clearTimeout(timer);
-            console.log("Receive device response");
-            let parsedMessage = JSON.parse(message.toString());
-            let friendlyName = topic.split('/')[1];
-            let index = devices.findIndex(device => device.friendly_name === friendlyName);
-            if (devices[index]["is_complete"] === false) {
-                switch(devices[index].type) {
-                    case 'lightbulb':
-                        devices[index].actions.state = parsedMessage.state.toLowerCase();
-                        devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
-                        if (devices[index].color) {
-                            devices[index].actions.color.hex = "#FF0000";
-                            devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
+            for (let i in devices) {
+                if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
+                    let friendlyName = topic.split('/')[1];
+                    let index = devices.findIndex(device => device.friendly_name === friendlyName);
+                    if (!device[index].is_complete) {
+                        clearTimeout(timer);
+                        console.log("Receive device response");
+                        let parsedMessage = JSON.parse(message.toString());
+                        if (devices[index]["is_complete"] === false) {
+                            switch(devices[index].type) {
+                                case 'lightbulb':
+                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
+                                    devices[index].actions.brightness["current_state"] = parsedMessage.brightness;
+                                    if (devices[index].color) {
+                                        devices[index].actions.color.hex = "#FF0000";
+                                        devices[index].actions.color_temp["current_state"] = parsedMessage.color_temp;
+                                    }
+                                    break;
+                                case 'switch':
+                                    devices[index].actions.state = parsedMessage.state.toLowerCase();
+                                    break;
+                            }
                         }
-                        break;
-                    case 'switch':
-                        devices[index].actions.state = parsedMessage.state.toLowerCase();
-                        break;
+    
+                        console.log("Orchestra - Completing devices...");
+                        devices[index].is_complete = true;
+                        console.log(devices);
+                        timer = createTimer(devices, res);
+                    }
                 }
             }
-
-            console.log("Orchestra - Completing devices...");
-            devices[index].is_complete = true;
-            console.log(devices);
-            timer = createTimer(devices, res, mqttClient);
         });
     } catch (error) {
         console.log("ERROR 500 - CATCHED");

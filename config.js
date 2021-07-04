@@ -54,7 +54,7 @@ async function sendNotification(title, message) {
     });
 }
 
-function createTimer(devices, res, client) {
+function createTimer(devices, res) {
     return setTimeout(() => {
         try {
             console.log("Orchestra - TIMER");
