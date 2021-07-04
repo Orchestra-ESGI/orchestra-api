@@ -84,6 +84,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
             timer = await createTimer(devices, res, mqttClient);
         });
     } catch (error) {
+        console.log("ERROR 500 - CATCHED");
+        console.log(error)
         res.status(500).send({
             error
         });
