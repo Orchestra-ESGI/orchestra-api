@@ -50,6 +50,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
         var timer = await createTimer(devices, res, newMqttClient);
 
         newMqttClient.on('message', async (topic, message) => {
+            console.log("TOPIC");
+            console.log(topic);
             for (let i in devices) {
                 if (topic === 'zigbee2mqtt/' + devices[i].friendly_name) {
                     if (!devices[i].is_complete) {
