@@ -68,7 +68,7 @@ async function createTimer(devices, res, mqttClient) {
             }
             
             console.log("Sending response :");
-            //await mqttClient.end();
+            await mqttClient.end();
             res.send({
                 devices,
                 error: null
