@@ -149,7 +149,7 @@ const {
                                                 await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                             }
                                             if (element.notify) {
-                                                await sendNotification("Uh oh", element.name + " has been launched");
+                                                //await sendNotification("Uh oh", element.name + " has been launched");
                                             }
                                         }
                                     }
