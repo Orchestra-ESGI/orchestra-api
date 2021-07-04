@@ -9,7 +9,6 @@ const {
     createTimer,
     fs,
     connectMongoClient,
-    createMqttClient
 } = require('../config');
 
 const { verifyHeaders } = require('../middleware/token_verification');
