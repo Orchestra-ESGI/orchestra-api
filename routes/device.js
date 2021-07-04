@@ -30,6 +30,23 @@ router.get('/all', verifyHeaders, async (req, res) => {
         let actionConf = JSON.parse(rawActionConf);
         console.log("Action conf");
         console.log(actionConf);
+
+        var count = 0;
+        var interval = setInterval(async () => {
+            if (count < devices.length) {
+                if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
+                devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
+                devices[count].type !== "temperature" && devices[count].type !== "humidity") {
+                    console.log("SUBSCRIBING TOPIC");
+                    console.log(devices[count].friendly_name);
+                    await newMqttClient.subscribe("zigbee2mqtt/" + devices[count].friendly_name);
+                    await newMqttClient.publish("zigbee2mqtt/" + devices[count].friendly_name + "/get", JSON.stringify({ "state": ""}));
+                    count += 1;
+                }
+            } else {
+                clearInterval(interval);
+            }
+        }, 100);
     
         for (let i in devices) {
             if (devices[i].type !== "unknown") {
@@ -42,15 +59,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 devices[i]["is_complete"] = false;
                 let deviceActions = devices[i].color ? action.color.actions : action.actions
                 devices[i]["actions"] = deviceActions;
-                if (devices[i].type !== "occupancy" && devices[i].type !== "contact" &&
-                    devices[i].type !== "programmableswitch" && devices[i].type !== "temperatureandhumidity" &&
-                    devices[i].type !== "temperature" && devices[i].type !== "humidity") {
-                        console.log("SUBSCRIBING TOPIC");
-                        console.log(devices[i].friendly_name);
-                        await sleep(100);
-                        await newMqttClient.subscribe("zigbee2mqtt/" + devices[i].friendly_name);
-                        await newMqttClient.publish("zigbee2mqtt/" + devices[i].friendly_name + "/get", JSON.stringify({ "state": ""}));
-                    }
             }
         }
 
