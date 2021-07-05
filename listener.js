@@ -30,6 +30,7 @@ async function createRoomIfNeeded(roomCol) {
             }
         ]
         for (let i in insertRooms) {
+            console.log("instering rooms");
             await roomCol.insertOne(insertRooms[i]);
         }
     }
