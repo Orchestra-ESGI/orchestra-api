@@ -51,7 +51,7 @@ async function sendNotification(title, message) {
         timeToLive: 60 * 60 * 24
       };
 
-    admin.messaging().sendToDevice(registratedTokens, notification, options).then( response => {
+    return admin.messaging().sendToDevice(registratedTokens, notification, options).then( response => {
         console.log("Notification sent successfully");
     }).catch( error => {
         console.log(error);
