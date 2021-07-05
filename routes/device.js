@@ -33,11 +33,14 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
         var count = 0;
         var interval = setInterval(async () => {
+            console.log("Logging INTEVERAL")
+            console.log(count);
+            console.log(devices.length);
             if(count > devices.length - 1){
                 clearInterval(interval);
                 return;
             }
-            console.log("INTERVAL");
+            
             if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
             devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
             devices[count].type !== "temperature" && devices[count].type !== "humidity" &&
