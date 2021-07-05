@@ -38,6 +38,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 clearInterval(interval);
             }
             console.log("INTERVAL");
+            console.log(devices);
             console.log(count);
             console.log(devices.length);
             if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
