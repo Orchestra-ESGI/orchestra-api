@@ -39,7 +39,6 @@ async function connectMongoClient() {
 async function sendNotification(title, message) {
     await connectMongoClient();
     const tokens = await client.db("orchestra").collection("fcm").find().toArray();
-    const registratedTokens = tokens.map(elem => elem.token);
     const notification = {
         notification: {
             title: title,
@@ -53,7 +52,7 @@ async function sendNotification(title, message) {
         
 
 
-        return admin.messaging().sendToDevice(token, payload)
+        return admin.messaging().sendToDevice(token, notification)
             .then(function (response) {
               return true;
             })
