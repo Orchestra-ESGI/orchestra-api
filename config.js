@@ -66,6 +66,7 @@ async function sendNotification(title, message) {
     let successCount = results.reduce((acc, v) => v ? acc + 1 : acc, 0);
     console.log(`Orchestra - Push notification`);
     console.log(`Successfully sent messages to ${successCount}/${results.length} devices.`);
+    return;
 }
 
 async function createTimer(devices, res, mqttClient) {
