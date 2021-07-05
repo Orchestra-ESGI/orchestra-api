@@ -34,7 +34,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
         var count = 0;
         var interval = setInterval(async () => {
             count += 1;
-            if(count > devices.length){
+            if(count > devices.length - 1){
                 clearInterval(interval);
                 return;
             }
