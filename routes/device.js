@@ -39,9 +39,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 return;
             }
             console.log("INTERVAL");
-            console.log(devices);
-            console.log(count);
-            console.log(devices.length);
             if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
             devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
             devices[count].type !== "temperature" && devices[count].type !== "humidity" && devices[count].type !== "unknown") {
