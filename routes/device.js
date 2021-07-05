@@ -34,7 +34,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
         var count = 0;
         var interval = setInterval(async () => {
             count += 1;
-            if(count < devices.length){
+            if(count > devices.length){
                 clearInterval(interval);
             }
             console.log("INTERVAL");
@@ -47,7 +47,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 console.log(devices[count].friendly_name);
                 await newMqttClient.subscribe("zigbee2mqtt/" + devices[count].friendly_name);
                 await newMqttClient.publish("zigbee2mqtt/" + devices[count].friendly_name + "/get", JSON.stringify({ "state": ""}));
-                count += 1;
             }
         }, 50);
     
