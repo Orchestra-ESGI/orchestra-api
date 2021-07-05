@@ -47,7 +47,9 @@ async function sendNotification(title, message) {
             body: message
         }
     };
-
+    var tokensArray = tokens.map(elem => elem.token);
+    pushNotification(tokensArray, notification);
+    /*
     let fcmPromisesArray = tokens.map(elem => {
 
         var token = elem.token;
@@ -67,6 +69,11 @@ async function sendNotification(title, message) {
     console.log(`Orchestra - Push notification`);
     console.log(`Successfully sent messages to ${successCount}/${results.length} devices.`);
     return;
+    */
+}
+
+function pushNotification(tokens, payload) {
+    return admin.messaging().sendToDevice(tokens, payload);
 }
 
 async function createTimer(devices, res, mqttClient) {
