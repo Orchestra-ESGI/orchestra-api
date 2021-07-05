@@ -7,6 +7,7 @@ const ObjectId = require('mongodb').ObjectId;
 const jwt = require('jsonwebtoken');
 const mqtt = require('async-mqtt');
 const nodemailer = require('nodemailer');
+const axios = require('axios');
 const fs = require('fs');
 const clientOpts = {
     username: "pi",
@@ -48,11 +49,16 @@ async function sendNotification(title, message) {
         }
     };
     var tokensArray = tokens.map(elem => elem.token);
-    pushNotification(tokensArray, notification);
-}
-
-function pushNotification(tokens, payload) {
-    return admin.messaging().sendToDevice(tokens, payload);
+    let payload = {
+        tokens: tokensArray,
+        payload: notification
+    }
+    try {
+        const response = await axios.post('https://orchestra-website.herokuapp.com/firebase/push/send', payload);
+    } catch (error) {
+        console.error("Push notification error");
+        console.log(error);
+    }
 }
 
 async function createTimer(devices, res, mqttClient) {
@@ -191,5 +197,5 @@ module.exports = {
     mqttClient,
     client,
     connectMongoClient,
-    createMqttClient
+    createMqttClient,
 };
