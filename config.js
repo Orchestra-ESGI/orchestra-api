@@ -52,9 +52,9 @@ async function sendNotification(title, message) {
       };
 
     return admin.messaging().sendToDevice(registratedTokens, notification, options).then( response => {
-        console.log("Notification sent successfully");
+        return console.log("Notification sent successfully");
     }).catch( error => {
-        console.log(error);
+        return console.log(error);
     });
 }
 
