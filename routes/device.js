@@ -40,18 +40,18 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 clearInterval(interval);
                 return;
             }
-            
-            if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
-            devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
-            devices[count].type !== "temperature" && devices[count].type !== "humidity" &&
-            devices[count].type !== "unknown") {
-                console.log("SUBSCRIBING TOPIC");
-                console.log(devices[count].friendly_name);
-                await newMqttClient.subscribe("zigbee2mqtt/" + devices[count].friendly_name);
-                await newMqttClient.publish("zigbee2mqtt/" + devices[count].friendly_name + "/get", JSON.stringify({ "state": ""}));
-            }
 
             count += 1;
+
+            if (devices[count - 1].type !== "occupancy" && devices[count - 1].type !== "contact" &&
+            devices[count - 1].type !== "programmableswitch" && devices[count - 1].type !== "temperatureandhumidity" &&
+            devices[count - 1].type !== "temperature" && devices[count - 1].type !== "humidity" &&
+            devices[count - 1].type !== "unknown") {
+                console.log("SUBSCRIBING TOPIC");
+                console.log(devices[count - 1].friendly_name);
+                await newMqttClient.subscribe("zigbee2mqtt/" + devices[count - 1].friendly_name);
+                await newMqttClient.publish("zigbee2mqtt/" + devices[count - 1].friendly_name + "/get", JSON.stringify({ "state": ""}));
+            }
         }, 100);
     
         for (let i in devices) {
