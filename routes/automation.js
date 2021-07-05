@@ -37,7 +37,7 @@ router.post('/', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('automation');
     
         var body = req.body;
-        body.background_color = "#41464D";
+        body.color = "#41464D";
         await col.insertOne(body);
     
         await mqttClient.subscribe('zigbee2mqtt/' + req.body.trigger.friendly_name);

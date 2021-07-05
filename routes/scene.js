@@ -37,7 +37,7 @@ router.post('/', verifyHeaders, async (req, res) => {
         const col = client.db("orchestra").collection('scene');
     
         var body = req.body;
-        body.background_color = "#41464D";
+        body.color = "#41464D";
         await col.insertOne(body);
 
         res.send({
