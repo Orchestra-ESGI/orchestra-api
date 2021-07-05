@@ -29,9 +29,9 @@ async function createRoomIfNeeded(roomCol) {
                 name: "Garage"
             }
         ]
-        insertRooms.forEach(async (room) => {
-            await roomCol.insertOne(room);
-        });
+        for (let i in insertRooms) {
+            await roomCol.insertOne(insertRooms[i]);
+        }
     }
 }
 
