@@ -46,15 +46,13 @@ async function sendNotification(title, message) {
             body: message
         }
     };
-    const options = {
-        priority: "high",
-        timeToLive: 60 * 60 * 24
-      };
 
-    return admin.messaging().sendToDevice(registratedTokens, notification, options).then( response => {
-        return console.log("Notification sent successfully");
+    return await admin.messaging().sendToDevice(registratedTokens, notification).then( response => {
+        console.log("Notification sent successfully");
+        return;
     }).catch( error => {
-        return console.log(error);
+        console.log(error);
+        return;
     });
 }
 
