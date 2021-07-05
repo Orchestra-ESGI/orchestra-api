@@ -49,27 +49,6 @@ async function sendNotification(title, message) {
     };
     var tokensArray = tokens.map(elem => elem.token);
     pushNotification(tokensArray, notification);
-    /*
-    let fcmPromisesArray = tokens.map(elem => {
-
-        var token = elem.token;
-
-        return admin.messaging().sendToDevice(token, notification)
-            .then(function (response) {
-              return true;
-            })
-            .catch(function (error) {
-                console.log("Error sending message to ", token);
-                return false;
-            });
-    });
-    
-    let results = await Promise.all(fcmPromisesArray);
-    let successCount = results.reduce((acc, v) => v ? acc + 1 : acc, 0);
-    console.log(`Orchestra - Push notification`);
-    console.log(`Successfully sent messages to ${successCount}/${results.length} devices.`);
-    return;
-    */
 }
 
 function pushNotification(tokens, payload) {
