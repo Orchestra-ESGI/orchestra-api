@@ -33,7 +33,9 @@ function createMqttClient() {
 }
 
 async function connectMongoClient() {
-    await client.connect();
+    if (!client.isConnected) {
+        await client.connect();
+    }
 };
 
 async function sendNotification(title, message) {
@@ -49,8 +51,6 @@ async function sendNotification(title, message) {
     let fcmPromisesArray = tokens.map(elem => {
 
         var token = elem.token;
-        
-
 
         return admin.messaging().sendToDevice(token, notification)
             .then(function (response) {
