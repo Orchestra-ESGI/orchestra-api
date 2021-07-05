@@ -47,15 +47,26 @@ async function sendNotification(title, message) {
         }
     };
 
-    sendFcmToken(registratedTokens, notification);
-}
+    let fcmPromisesArray = tokens.map(elem => {
 
-async function sendFcmToken(registratedTokens, notification) {
-    admin.messaging().sendToDevice(registratedTokens, notification).then( (response) => {
-        console.log("Notification sent successfully");
-    }).catch( error => {
-        console.log(error);
+        var token = elem.token;
+        
+
+
+        return admin.messaging().sendToDevice(token, payload)
+            .then(function (response) {
+              return true;
+            })
+            .catch(function (error) {
+                console.log("Error sending message to ", token);
+                return false;
+            });
     });
+    
+    let results = await Promise.all(fcmPromisesArray);
+    let successCount = results.reduce((acc, v) => v ? acc + 1 : acc, 0);
+    console.log(`Orchestra - Push notification`);
+    console.log(`Successfully sent messages to ${successCount}/${results.length} devices.`);
 }
 
 async function createTimer(devices, res, mqttClient) {
