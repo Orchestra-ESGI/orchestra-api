@@ -98,7 +98,7 @@ router.post('/:id', verifyHeaders, async (req, res) => {
         }
 
         if (results[0].notify) {
-            await sendNotification("Uh oh", results[0].name + " has been launched");
+            sendNotification("Uh oh", results[0].name + " has been launched");
         }
 
         res.send({
