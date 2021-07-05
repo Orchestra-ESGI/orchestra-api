@@ -33,6 +33,9 @@ router.get('/all', verifyHeaders, async (req, res) => {
 
         var count = 0;
         var interval = setInterval(async () => {
+            console.log("INTERVAL");
+            console.log(count);
+            console.log(devices.length);
             if (count < devices.length) {
                 if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
                 devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
