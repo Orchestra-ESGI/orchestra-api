@@ -12,6 +12,7 @@ const {
 async function createRoomIfNeeded(roomCol) {
     console.log("inside createRoom function");
     let rooms = roomCol.find().toArray();
+    console.log(rooms);
     if (rooms.length === 0) {
         let insertRooms = [
             {
