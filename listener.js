@@ -10,9 +10,7 @@ const {
 } = require('./config');
 
 async function createRoomIfNeeded(roomCol) {
-    console.log("inside createRoom function");
-    let rooms = roomCol.find().toArray();
-    console.log(rooms);
+    let rooms = await roomCol.find().toArray();
     if (rooms.length === 0) {
         let insertRooms = [
             {
@@ -32,7 +30,8 @@ async function createRoomIfNeeded(roomCol) {
             }
         ]
         for (let i in insertRooms) {
-            console.log("instering rooms");
+            console.log("Orchestra - Instering rooms");
+            console.log(insertRooms[i])
             await roomCol.insertOne(insertRooms[i]);
         }
     }
