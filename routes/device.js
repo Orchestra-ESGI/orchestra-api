@@ -34,7 +34,7 @@ router.get('/all', verifyHeaders, async (req, res) => {
         devices.forEach(async (device) => {
             if (device.type !== "occupancy" && device.type !== "contact" &&
             device.type !== "programmableswitch" && device.type !== "temperatureandhumidity" &&
-            device.type !== "temperature" && device.type !== "humidity") {
+            device.type !== "temperature" && device.type !== "humidity" && device.type !== "unknown") {
                 console.log("SUBSCRIBING");
                 console.log(device.friendly_name);
                 await newMqttClient.subscribe("zigbee2mqtt/" + device.friendly_name);
