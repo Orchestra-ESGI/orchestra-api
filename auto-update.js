@@ -19,4 +19,4 @@ setInterval(
         } catch (error) {
             console.error(error);
         }
-    }, 60000);
+    }, 86400000);
