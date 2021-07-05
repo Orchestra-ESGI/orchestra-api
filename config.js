@@ -47,12 +47,14 @@ async function sendNotification(title, message) {
         }
     };
 
-    return await admin.messaging().sendToDevice(registratedTokens, notification).then( response => {
+    sendFcmToken(registratedTokens, notification);
+}
+
+async function sendFcmToken(registratedTokens, notification) {
+    admin.messaging().sendToDevice(registratedTokens, notification).then( (response) => {
         console.log("Notification sent successfully");
-        return;
     }).catch( error => {
         console.log(error);
-        return;
     });
 }
 
