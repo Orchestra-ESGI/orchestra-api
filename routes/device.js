@@ -37,7 +37,6 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 clearInterval(interval);
                 return;
             }
-            count += 1;
             console.log("INTERVAL");
             if (devices[count].type !== "occupancy" && devices[count].type !== "contact" &&
             devices[count].type !== "programmableswitch" && devices[count].type !== "temperatureandhumidity" &&
@@ -47,6 +46,8 @@ router.get('/all', verifyHeaders, async (req, res) => {
                 await newMqttClient.subscribe("zigbee2mqtt/" + devices[count].friendly_name);
                 await newMqttClient.publish("zigbee2mqtt/" + devices[count].friendly_name + "/get", JSON.stringify({ "state": ""}));
             }
+            
+            count += 1;
         }, 100);
     
         for (let i in devices) {
