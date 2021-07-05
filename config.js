@@ -34,7 +34,7 @@ function createMqttClient() {
 
 async function connectMongoClient() {
     console.log("connected function");
-    if (!client.isConnected) {
+    if (!client || !client.isConnected) {
         console.log("inside if");
         await client.connect();
     }
