@@ -112,6 +112,7 @@ async function createRoomIfNeeded(roomCol) {
                     }
                 }
             } else {
+                console.log("Orchestra - TEST");
                 const automations = await automationCol.find().toArray();
                 automations.forEach(async (element) => {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
