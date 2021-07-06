@@ -68,6 +68,7 @@ async function createRoomIfNeeded(roomCol) {
             
             var parsedMessage = JSON.parse(message.toString());
             if (topic === mqttTopic) {
+                console.log("Orchestra - TEST");
                 for(let i in parsedMessage) {
                     if (parsedMessage[i].friendly_name !== "Coordinator") {
                         var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
@@ -112,7 +113,6 @@ async function createRoomIfNeeded(roomCol) {
                     }
                 }
             } else {
-                console.log("Orchestra - TEST");
                 const automations = await automationCol.find().toArray();
                 automations.forEach(async (element) => {
                     if(topic === 'zigbee2mqtt/' + element.trigger.friendly_name) {
