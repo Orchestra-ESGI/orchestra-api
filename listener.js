@@ -130,7 +130,7 @@ async function createRoomIfNeeded(roomCol) {
                                     console.log(parsedMessage);
                                     if (parsedMessage[element.trigger.type] === val) {
                                         for (let i in element.targets) {
-                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -147,7 +147,7 @@ async function createRoomIfNeeded(roomCol) {
                                 if (element.trigger.actions.operator === "gt") {
                                     if (parsedMessage[element.trigger.type] >= val) {
                                         for (let i in element.targets) {
-                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -156,7 +156,7 @@ async function createRoomIfNeeded(roomCol) {
                                 } else if (element.trigger.actions.operator === "lt") {
                                     if (parsedMessage[element.trigger.type] <= val) {
                                         for (let i in element.targets) {
-                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -178,7 +178,7 @@ async function createRoomIfNeeded(roomCol) {
                                         console.log(parsedMessage);
                                         if (parsedMessage["action"] === val) {
                                             for (let i in element.targets) {
-                                                await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                                mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                             }
                                             if (element.notify) {
                                                 await sendNotification("Uh oh", element.name + " has been launched");
