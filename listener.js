@@ -61,9 +61,9 @@ async function createRoomIfNeeded(roomCol) {
         newMqttClient.on('message', async (topic, message) => {
 
             var subbedTopic = await automationCol.find().toArray();
-            subbedTopic.forEach(async (element) => {
-                await newMqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
-            });
+            for (let i in subbedTopic) {
+                await newMqttClient.subscribe('zigbee2mqtt/' + subbedTopic[i].trigger.friendly_name);
+            }
             
             console.log("Orchestra - NEW MESSAGE LISTENER");
             console.log(topic);
