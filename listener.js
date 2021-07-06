@@ -55,7 +55,7 @@ async function createRoomIfNeeded(roomCol) {
         var subbedTopic = await automationCol.find().toArray();
         var count = 0;
         var interval = setInterval(async () => {
-            if(count > devices.length - 1){
+            if(count > subbedTopic.length - 1){
                 clearInterval(interval);
                 return;
             }
@@ -71,7 +71,7 @@ async function createRoomIfNeeded(roomCol) {
             var subbedTopic = await automationCol.find().toArray();
             var newCount = 0;
             var interval = setInterval(async () => {
-                if(newCount > devices.length - 1){
+                if(newCount > subbedTopic.length - 1){
                     clearInterval(interval);
                     return;
                 }
