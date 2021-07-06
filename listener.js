@@ -1,12 +1,12 @@
 const {
     client,
+    mqttClient,
     getType,
     getHasColor,
     getOnAndOffValues,
     getProgrammableSwitchValues,
     sendNotification,
-    connectMongoClient,
-    createMqttClient
+    connectMongoClient
 } = require('./config');
 
 async function createRoomIfNeeded(roomCol) {
@@ -39,51 +39,31 @@ async function createRoomIfNeeded(roomCol) {
 
 (async function newDeviceListener() {
     try {
-        var newMqttClient = createMqttClient();
         await connectMongoClient();
         const col = client.db("orchestra").collection('device');
         const automationCol = client.db('orchestra').collection('automation');
         await col.createIndex({ friendly_name: 1 }, { unique: true } );
 
         const mqttTopic = "zigbee2mqtt/bridge/devices";
-        await newMqttClient.subscribe(mqttTopic);
+        await mqttClient.subscribe(mqttTopic);
 
         const roomCol = client.db('orchestra').collection('room');
         await roomCol.createIndex({ name: 1 }, { unique: true } );
         await createRoomIfNeeded(roomCol);
 
         var subbedTopic = await automationCol.find().toArray();
-        var count = 0;
-        var interval = setInterval(async () => {
-            if(count > subbedTopic.length - 1){
-                clearInterval(interval);
-                return;
-            }
-
-            count += 1;
-            console.log("SUBSCRIBING TOPIC");
-            await newMqttClient.subscribe("zigbee2mqtt/" + subbedTopic[count - 1].trigger.friendly_name);
-        }, 100);
+        subbedTopic.forEach(async (element) => {
+            await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
+        });
 
         //Called twice dunno why ???????
-        newMqttClient.on('message', async (topic, message) => {
+        mqttClient.on('message', async (topic, message) => {
 
             var subbedTopic = await automationCol.find().toArray();
-            var newCount = 0;
-            var interval = setInterval(async () => {
-                if(newCount > subbedTopic.length - 1){
-                    clearInterval(interval);
-                    return;
-                }
-    
-                newCount += 1;
-                console.log("SUBSCRIBING TOPIC");
-                await newMqttClient.subscribe("zigbee2mqtt/" + subbedTopic[newCount - 1].trigger.friendly_name);
-            }, 100);
+            subbedTopic.forEach(async (element) => {
+                await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
+            });
             
-            console.log("Orchestra - NEW MESSAGE LISTENER");
-            console.log(topic);
-
             var parsedMessage = JSON.parse(message.toString());
             if (topic === mqttTopic) {
                 for(let i in parsedMessage) {
@@ -150,7 +130,7 @@ async function createRoomIfNeeded(roomCol) {
                                     console.log(parsedMessage);
                                     if (parsedMessage[element.trigger.type] === val) {
                                         for (let i in element.targets) {
-                                            await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -167,7 +147,7 @@ async function createRoomIfNeeded(roomCol) {
                                 if (element.trigger.actions.operator === "gt") {
                                     if (parsedMessage[element.trigger.type] >= val) {
                                         for (let i in element.targets) {
-                                            await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -176,7 +156,7 @@ async function createRoomIfNeeded(roomCol) {
                                 } else if (element.trigger.actions.operator === "lt") {
                                     if (parsedMessage[element.trigger.type] <= val) {
                                         for (let i in element.targets) {
-                                            await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                            await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
                                             await sendNotification("Uh oh", element.name + " has been launched");
@@ -198,7 +178,7 @@ async function createRoomIfNeeded(roomCol) {
                                         console.log(parsedMessage);
                                         if (parsedMessage["action"] === val) {
                                             for (let i in element.targets) {
-                                                await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
+                                                await mqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                             }
                                             if (element.notify) {
                                                 await sendNotification("Uh oh", element.name + " has been launched");
