@@ -172,6 +172,11 @@ router.delete('/', async (req, res, next) => {
     try {
         await connectMongoClient();
         const col = client.db("orchestra").collection("user");
+        const fcmCol = client.db("orchestra").collection("fcm");
+        var user = await col.find({ email: req.body.email }).toArray();
+        if (user.length !== 0) {
+            await fcmCol.deleteMany({ user_id: user[0]._id });
+        }
         await col.deleteOne({ email: req.body.email });
 
         res.status(200).send({
