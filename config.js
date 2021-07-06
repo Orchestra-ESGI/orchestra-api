@@ -48,12 +48,15 @@ async function sendNotification(title, message) {
         tokens: tokensArray,
         payload: notification
     }
-    try {
-        axios.post('https://orchestra-website.herokuapp.com/firebase/push/send', payload);
-    } catch (error) {
-        console.error("Push notification error");
-        console.log(error);
-    }
+    axios.post('https://orchestra-website.herokuapp.com/firebase/push/send', payload)
+    .then(function (response) {
+        // handle success
+        console.log("FCM Response Success");
+    })
+    .catch(function (error) {
+        // handle error
+        console.log("FCM Response Error");
+    });
 }
 
 async function createTimer(devices, res, mqttClient) {
