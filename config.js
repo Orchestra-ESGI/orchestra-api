@@ -49,7 +49,7 @@ async function sendNotification(title, message) {
         payload: notification
     }
     try {
-        const response = await axios.post('https://orchestra-website.herokuapp.com/firebase/push/send', payload);
+        axios.post('https://orchestra-website.herokuapp.com/firebase/push/send', payload);
     } catch (error) {
         console.error("Push notification error");
         console.log(error);
