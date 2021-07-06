@@ -153,7 +153,7 @@ async function createRoomIfNeeded(roomCol) {
                                             await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
-                                            await sendNotification("Uh oh", element.name + " has been launched");
+                                            //await sendNotification("Uh oh", element.name + " has been launched");
                                         }
                                     }
                                 }
@@ -170,7 +170,7 @@ async function createRoomIfNeeded(roomCol) {
                                             await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
-                                            await sendNotification("Uh oh", element.name + " has been launched");
+                                            //await sendNotification("Uh oh", element.name + " has been launched");
                                         }
                                     }
                                 } else if (element.trigger.actions.operator === "lt") {
@@ -179,7 +179,7 @@ async function createRoomIfNeeded(roomCol) {
                                             await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                         }
                                         if (element.notify) {
-                                            await sendNotification("Uh oh", element.name + " has been launched");
+                                            //await sendNotification("Uh oh", element.name + " has been launched");
                                         }
                                     }
                                 }
@@ -201,7 +201,7 @@ async function createRoomIfNeeded(roomCol) {
                                                 await newMqttClient.publish('zigbee2mqtt/' + element.targets[i].friendly_name + '/set', JSON.stringify(element.targets[i].actions));
                                             }
                                             if (element.notify) {
-                                                await sendNotification("Uh oh", element.name + " has been launched");
+                                                //await sendNotification("Uh oh", element.name + " has been launched");
                                             }
                                         }
                                     }
