@@ -5,6 +5,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 
 
+var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/user');
 var sceneRouter = require('./routes/scene');
 var roomRouter = require('./routes/room');
@@ -21,6 +22,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use('/', indexRouter);
 app.use('/user', usersRouter);
 app.use('/device', deviceRouter);
 app.use('/scene', sceneRouter);
