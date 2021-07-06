@@ -59,16 +59,16 @@ async function createRoomIfNeeded(roomCol) {
         //Called twice dunno why ???????
         mqttClient.on('message', async (topic, message) => {
 
-            console.log("Orchestra - NEW MESSAGE LISTENER");
-
             var subbedTopic = await automationCol.find().toArray();
             subbedTopic.forEach(async (element) => {
                 await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
             });
             
+            console.log("Orchestra - NEW MESSAGE LISTENER");
+            console.log(topic);
+
             var parsedMessage = JSON.parse(message.toString());
             if (topic === mqttTopic) {
-                console.log("Orchestra - TEST");
                 for(let i in parsedMessage) {
                     if (parsedMessage[i].friendly_name !== "Coordinator") {
                         var device = await col.find({ friendly_name: parsedMessage[i].friendly_name }).toArray();
