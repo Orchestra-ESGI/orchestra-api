@@ -59,6 +59,8 @@ async function createRoomIfNeeded(roomCol) {
         //Called twice dunno why ???????
         mqttClient.on('message', async (topic, message) => {
 
+            console.log("Orchestra - NEW MESSAGE LISTENER");
+
             var subbedTopic = await automationCol.find().toArray();
             subbedTopic.forEach(async (element) => {
                 await mqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
