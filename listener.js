@@ -53,9 +53,9 @@ async function createRoomIfNeeded(roomCol) {
         await createRoomIfNeeded(roomCol);
 
         var subbedTopic = await automationCol.find().toArray();
-        subbedTopic.forEach(async (element) => {
-            await newMqttClient.subscribe('zigbee2mqtt/' + element.trigger.friendly_name);
-        });
+        for (let i in subbedTopic) {
+            await newMqttClient.subscribe('zigbee2mqtt/' + subbedTopic[i].trigger.friendly_name);
+        }
 
         //Called twice dunno why ???????
         newMqttClient.on('message', async (topic, message) => {
