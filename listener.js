@@ -53,17 +53,33 @@ async function createRoomIfNeeded(roomCol) {
         await createRoomIfNeeded(roomCol);
 
         var subbedTopic = await automationCol.find().toArray();
-        for (let i in subbedTopic) {
-            await newMqttClient.subscribe('zigbee2mqtt/' + subbedTopic[i].trigger.friendly_name);
-        }
+        var count = 0;
+        var interval = setInterval(async () => {
+            if(count > devices.length - 1){
+                clearInterval(interval);
+                return;
+            }
+
+            count += 1;
+            console.log("SUBSCRIBING TOPIC");
+            await newMqttClient.subscribe("zigbee2mqtt/" + subbedTopic[count - 1].trigger.friendly_name);
+        }, 100);
 
         //Called twice dunno why ???????
         newMqttClient.on('message', async (topic, message) => {
 
             var subbedTopic = await automationCol.find().toArray();
-            for (let i in subbedTopic) {
-                await newMqttClient.subscribe('zigbee2mqtt/' + subbedTopic[i].trigger.friendly_name);
-            }
+            var newCount = 0;
+            var interval = setInterval(async () => {
+                if(newCount > devices.length - 1){
+                    clearInterval(interval);
+                    return;
+                }
+    
+                newCount += 1;
+                console.log("SUBSCRIBING TOPIC");
+                await newMqttClient.subscribe("zigbee2mqtt/" + subbedTopic[newCount - 1].trigger.friendly_name);
+            }, 100);
             
             console.log("Orchestra - NEW MESSAGE LISTENER");
             console.log(topic);
