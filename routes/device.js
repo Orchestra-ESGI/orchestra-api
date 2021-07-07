@@ -13,10 +13,6 @@ const {
 
 const { verifyHeaders } = require('../middleware/token_verification');
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
 router.get('/all', verifyHeaders, async (req, res) => {
 
     try {
