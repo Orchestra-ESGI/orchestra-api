@@ -14,7 +14,7 @@ const {
 const { verifyHeaders } = require('../middleware/token_verification');
 
 /* RÉCUPERATION DE TOUT LES USERS */
-router.get('/all', verifyHeaders, async function (req, res, next) {
+router.get('/all', async function (req, res, next) {
 
     try {
         await connectMongoClient();
