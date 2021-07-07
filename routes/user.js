@@ -7,6 +7,7 @@ const {
     jwt,
     transporter,
     ObjectId,
+    passwordHash,
     connectMongoClient
 } = require("../config");
 
@@ -19,7 +20,7 @@ router.get('/all', verifyHeaders, async function (req, res, next) {
         await connectMongoClient();
         const col = client.db("orchestra").collection('user');
     
-        let results = await col.find({}).project({ password: 0 }).toArray();
+        let results = await col.find({}).toArray()//project({ password: 0 }).toArray();
         
         res.send({
             results,
@@ -50,7 +51,7 @@ router.post('/signup', async (req, res, next) => {
     
             var result = await col.insertOne({
                 email: req.body.email,
-                password: req.body.password,
+                password: passwordHash.generate(req.body.password),
                 is_verified: false
             });
     
@@ -99,7 +100,7 @@ router.post('/login', async (req, res, next) => {
         await connectMongoClient();
         const col = client.db("orchestra").collection("user");
 
-        var result = await col.find({ email: req.body.email, password: req.body.password, is_verified: true }).toArray();
+        var result = await col.find({ email: req.body.email, password: passwordHash.generate(req.body.password), is_verified: true }).toArray();
         if (result.length && result.length !== 0) {
             jwt.sign({
                 _id: result[0]._id,
