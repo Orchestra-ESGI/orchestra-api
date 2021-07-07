@@ -97,6 +97,7 @@ router.post('/signup', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
 
     try {
+        console.log(passwordHash.generate(req.body.password));
         await connectMongoClient();
         const col = client.db("orchestra").collection("user");
 
