@@ -97,12 +97,11 @@ router.post('/signup', async (req, res, next) => {
 router.post('/login', async (req, res, next) => {
 
     try {
-        console.log(passwordHash.generate(req.body.password));
         await connectMongoClient();
         const col = client.db("orchestra").collection("user");
 
-        var result = await col.find({ email: req.body.email, password: passwordHash.generate(req.body.password), is_verified: true }).toArray();
-        if (result.length && result.length !== 0) {
+        var result = await col.find({ email: req.body.email, is_verified: true }).toArray();
+        if (result.length && result.length !== 0 && passwordHash.verify(passwordHash.generate(req.body.password), result[0].password)) {
             jwt.sign({
                 _id: result[0]._id,
                 email: result[0].email,
