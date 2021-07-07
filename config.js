@@ -5,7 +5,6 @@ const APP_KEY = process.env.APP_KEY || "orchestra";
 const MongoClient = require('mongodb').MongoClient;
 const ObjectId = require('mongodb').ObjectId;
 const jwt = require('jsonwebtoken');
-const passwordHash = require('password-hash');
 const mqtt = require('async-mqtt');
 const nodemailer = require('nodemailer');
 const axios = require('axios');
@@ -196,6 +195,5 @@ module.exports = {
     mqttClient,
     client,
     connectMongoClient,
-    createMqttClient,
-    passwordHash
+    createMqttClient
 };

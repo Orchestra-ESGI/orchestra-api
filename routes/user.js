@@ -1,13 +1,16 @@
 var express = require('express');
 var router = express.Router();
 const validator = require('validator');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+const myPlaintextPassword = 's0/\/\P4$$w0rD';
+const someOtherPlaintextPassword = 'not_bacon';
 const {
     client,
     JWT_KEY,
     jwt,
     transporter,
     ObjectId,
-    passwordHash,
     connectMongoClient
 } = require("../config");
 
@@ -51,7 +54,7 @@ router.post('/signup', async (req, res, next) => {
     
             var result = await col.insertOne({
                 email: req.body.email,
-                password: passwordHash.generate(req.body.password),
+                password: bcrypt.hashSync(req.body.password, saltRounds),
                 is_verified: false
             });
     
@@ -101,7 +104,8 @@ router.post('/login', async (req, res, next) => {
         const col = client.db("orchestra").collection("user");
 
         var result = await col.find({ email: req.body.email, is_verified: true }).toArray();
-        if (result.length && result.length !== 0 && passwordHash.verify(passwordHash.generate(req.body.password), result[0].password)) {
+        console.log(bcrypt.compareSync(req.body.password, result[0].password));
+        if (result.length && result.length !== 0 && bcrypt.compareSync(req.body.password, result[0].password)) {
             jwt.sign({
                 _id: result[0]._id,
                 email: result[0].email,
