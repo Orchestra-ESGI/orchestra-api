@@ -1,0 +1,1034 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Swagger Orchestra API",
+    "description": "Documentation de l'API utilisée par les applications Orchestra sur Android et iOS",
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost:8000",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Routing to manage users"
+    },
+    {
+      "name": "Scenes",
+      "description": "Routing to manage scenes created by a user"
+    },
+    {
+      "name": "Houses",
+      "description": "Routing to manage houses of a user"
+    }
+
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    
+    "/users/get/all": {
+      "get": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "summary": "Returns all users from DB",
+        "responses": {
+          "200": {
+            "description": "OK - Returns all the details about all the users from the DB",
+            "schema": {
+              "properties": {
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/remove/one": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "in": "header",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_user",
+            "in": "body",
+            "required": true,
+            "description": "ID of the user that you want to remove from the DB",
+            "schema": {
+              "properties": {
+                "id_user": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes one specific user from db",
+        "responses": {
+          "200": {
+            "description": "OK - Returns removed user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/remove/group": {
+      "delete": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_ids",
+            "in": "body",
+            "required": true,
+            "description": "Array of ids of the users that you want to remove from the DB",
+            "schema": {
+              "properties": {
+                "users_to_remove": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "uniqueItems": true
+                      },
+                      "name": {
+                        "type": "string",
+                        "uniqueItems": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes a group of users",
+        "responses": {
+          "200": {
+            "description": "OK - Returns all ids of removed users",
+            "schema": {
+              "properties": {
+                "users_id": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "properties": {
+                      "id":{
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/update/name": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "Data to update user name",
+            "required": true,
+            "schema": {
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "description": "id of the user that you want to update the name"
+                },
+                "user_new_name": {
+                  "type": "string",
+                  "description": "This is the new name of the user"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Updates user name",
+        "responses": {
+          "200": {
+            "description": "OK - Returns updated user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/update/password": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "Data to update user password",
+            "required": true,
+            "schema": {
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "description": "id of the user that you want to update the password"
+                },
+                "update_password": {
+                  "type": "string",
+                  "description": "This is the new password of the user"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Updates user password",
+        "responses": {
+          "200": {
+            "description": "OK - Returns updated user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/update/email": {
+      "put": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user_id",
+            "in": "body",
+            "description": "Data to update user email",
+            "required": true,
+            "schema": {
+              "properties": {
+                "user_id": {
+                  "type": "string",
+                  "description": "id of the user that you want to update the email"
+                },
+                "update_email": {
+                  "type": "string",
+                  "description": "This is the new email of the user"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Updates user email",
+        "responses": {
+          "200": {
+            "description": "OK - Returns updated user",
+            "schema": {
+              "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/account/login": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "description": "Data to log in the user",
+            "schema": {
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "description": "Email of the user"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "Password of the user"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Returns the user that has logged in from DB",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+                "$ref": "#/definitions/User"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/users/account/signin": {
+      "post": {
+        "tags": [
+          "Users"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "body",
+            "description": "Data to sign in the user",
+            "required": true,
+            "schema": {
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "The name used by the user in the app"
+                },
+                "email": {
+                  "type": "string",
+                  "description": "The email used by the user to sign/log in"
+                },
+                "password": {
+                  "type": "string",
+                  "description": "The password used by the user to sign/log in"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Returns user that has created an account",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "users": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/User"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+
+    "/scenes/get/all": {
+      "get": {
+        "tags": [
+          "Scenes"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_house",
+            "in": "body",
+            "description": "Id of the house associated with the scenes",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id_house": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Returns all scenes of a specific user from DB",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "scenes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/Scene"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/scenes/remove/one": {
+      "delete": {
+        "tags": [
+          "Scenes"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_scene",
+            "in": "body",
+            "description": "id of the scene you want to remove",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id_scene": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes one specific scene from db",
+        "responses": {
+          "200": {
+            "description": "OK - Returns removed scene",
+            "schema": {
+              "$ref": "#/definitions/Scene"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/scenes/remove/group": {
+      "delete": {
+        "tags": [
+          "Scenes"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "scene_ids",
+            "in": "body",
+            "required": true,
+            "description": "An array of ids of the scenes you want to remove from DB",
+            "schema": {
+              "properties": {
+                "removed_scenes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "uniqueItems": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes a group of scenes",
+        "responses": {
+          "200": {
+            "description": "OK - Returns all removed scenes",
+            "schema": {
+              "title": "removed_scenes",
+              "properties": {
+                "ids": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+
+    "/houses/get/all": {
+      "get": {
+        "tags": [
+          "Houses"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_user",
+            "in": "body",
+            "description": "Id of the user associated with the house(s)",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id_user": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Returns all houses of a specific user from DB",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "properties": {
+                "houses": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/House"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/houses/remove/one": {
+      "delete": {
+        "tags": [
+          "Houses"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id_house",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "id_house": {
+                  "type": "string",
+                  "description": "id of the house youu want to remove from DB"
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes one specific house from db",
+        "responses": {
+          "200": {
+            "description": "OK - Returns removed house",
+            "schema": {
+              "$ref": "#/definitions/House"
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    },
+    "/houses/remove/group": {
+      "delete": {
+        "tags": [
+          "Houses"
+        ],
+        "parameters": [
+          {
+            "name": "id_token",
+            "in": "header",
+            "description": "OAuth token generated to use the API, ask an admin to get yours",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "house_ids",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "properties": {
+                "scenes_to_remove": {
+                  "description": "This is th array of id oof the houses taht you want to remove from DB",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "_id": {
+                        "type": "string",
+                        "uniqueItems": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ],
+        "summary": "Removes a group of scenes",
+        "responses": {
+          "200": {
+            "description": "OK - Returns all removed scenes",
+            "schema": {
+              "title": "removed_scenes",
+              "properties": {
+                "ids": {
+                  "type": "array"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "KO - Unauthorized to use this WS (token is outdated)",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "404": {
+            "description": "KO - WS not found, this route does not exist oro has been removed",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          },
+          "500": {
+            "description": "KO - Server error, check with an admin the status of the API",
+            "schema": {
+              "$ref": "#/definitions/Error"
+            }
+          }
+        }
+      }
+    }
+
+  },
+  "definitions": {
+    "User": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "name": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "password": {
+          "type": "string"
+        },
+        "is_removed": {
+          "type": "boolean"
+        },
+        "houses": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/House"
+          }
+        }
+      },
+      "required": [
+        "_id",
+        "name",
+        "email",
+        "password"
+      ]
+    },
+    "Scene": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "title": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "background_color": {
+          "type": "string"
+        },
+        "idUser": {
+          "type": "string"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "_id",
+        "title",
+        "description",
+        "actions"
+      ]
+    },
+    "House": {
+      "properties": {
+        "_id": {
+          "type": "string",
+          "uniqueItems": true
+        },
+        "house_name": {
+          "type": "string"
+        },
+        "house_adress": {
+          "type": "string"
+        },
+        "scenes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Scene"
+          }
+        }
+      },
+      "required": [
+        "_id",
+        "house_name",
+        "house_adress",
+        "scenes"
+      ]
+    },
+    "Error":{
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

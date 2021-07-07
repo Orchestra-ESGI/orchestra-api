@@ -1,0 +1,100 @@
+{
+    "lightbulb": {
+        "Philips": {
+            "color": {
+                "actions": {
+                    "state": "on",
+                    "brightness": {
+                        "min_val": 0,
+                        "max_val": 255
+                    },
+                    "color_temp": {
+                        "min_val": 150,
+                        "max_val": 500
+                    },
+                    "color": {
+                        "hex": ""
+                    }
+                }
+            },
+            "actions": {
+                "state": "on",
+                "brightness": {
+                    "min_val": 0,
+                    "max_val": 255
+                }
+            }
+        },
+        "Xiaomi": {
+            "actions": {
+                "state": "on",
+                "brightness": {
+                    "min_val": 0,
+                    "max_val": 255
+                },
+                "color_temp": {
+                    "min_val": 150,
+                    "max_val": 500
+                },
+                "color": {
+                    "hex": ""
+                }
+            }
+        }
+    },
+    "switch": {
+        "OSRAM": {
+            "actions": {
+                "state": "on"
+            }
+        }
+    },
+    "occupancy": {
+        "SONOFF": {
+            "actions": {
+                "state": "on"
+            }
+        },
+        "Philips": {
+            "actions": {
+                "state": "on"
+            }
+        },
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
+        }
+    },
+    "contact": {
+        "SONOFF": {
+            "actions": {
+                "state": "on"
+            }
+        },
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
+        }
+    },
+    "programmableswitch": {
+        "SONOFF": {
+            "actions": {
+                "state": "on"
+            }
+        },
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
+        }
+    },
+    "temperatureandhumidity": {
+        "Xiaomi": {
+            "actions": {
+                "state": "on"
+            }
+        }
+    }
+}

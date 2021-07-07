@@ -1,0 +1,147 @@
+[
+    {
+        "brand": "Philips",
+        "devices": [
+            {
+                "type": "lightbulb",
+                "name": "Philips Hue White",
+                "color": false,
+                "model": "9290022167",
+                "image": "https://images-na.ssl-images-amazon.com/images/I/410xhbf4MRL.jpg",
+                "documentation": null
+            },
+            {
+                "type": "lightbulb",
+                "name": "Philips Hue White",
+                "color": false,
+                "model": "8718699673147",
+                "image": "https://images-na.ssl-images-amazon.com/images/I/410xhbf4MRL.jpg",
+                "documentation": null
+            },
+            {
+                "type": "lightbulb",
+                "name": "Philips Hue Color",
+                "color": true,
+                "model": "9290022166",
+                "image": "https://www.zigbee2mqtt.io/images/devices/9290022166.jpg",
+                "documentation": null
+            },
+            {
+                "type": "occupancy",
+                "name": "Hue motion sensor",
+                "model": "9290012607",
+                "image": "https://www.zigbee2mqtt.io/images/devices/9290012607.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/9290012607.html#pairing",
+                "onValue": true,
+                "offValue": false
+            }
+        ]
+    },
+    {
+        "brand": "SONOFF",
+        "devices": [
+            {
+                "type": "occupancy",
+                "name": "Motion sensor",
+                "model": "SNZB-03",
+                "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-03.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-03.html#pairing",
+                "onValue": true,
+                "offValue": false
+            },
+            {
+                "type": "contact",
+                "name": "Contact sensor",
+                "model": "SNZB-04",
+                "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-04.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-04.html#pairing",
+                "onValue": true,
+                "offValue": false
+            },
+            {
+                "type": "programmableswitch",
+                "name": "Wireless button",
+                "model": "SNZB-01",
+                "image": "https://www.zigbee2mqtt.io/images/devices/SNZB-01.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/SNZB-01.html#pairing",
+                "switch_values": [
+                    {
+                        "orchestra_key": "single",
+                        "zigbee_key": "single"
+                    },
+                    {
+                        "orchestra_key": "double",
+                        "zigbee_key": "double"
+                    },
+                    {
+                        "orchestra_key": "long",
+                        "zigbee_key": "long"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "brand": "OSRAM",
+        "devices": [
+            {
+                "type": "switch",
+                "name": "Smart+ plug",
+                "model": "AB3257001NJ",
+                "image": "https://www.zigbee2mqtt.io/images/devices/AB3257001NJ.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/AB3257001NJ.html#pairing"
+            }
+        ]
+    },
+    {
+        "brand": "Xiaomi",
+        "devices": [
+            {
+                "type": "occupancy",
+                "name": "MiJia human body movement sensor",
+                "model": "RTCGQ01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/RTCGQ01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/RTCGQ01LM.html#pairing",
+                "onValue": true,
+                "offValue": false
+            },
+            {
+                "type": "contact",
+                "name": "MiJia door & window contact sensor",
+                "model": "MCCGQ01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/MCCGQ01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/MCCGQ01LM.html#pairing",
+                "onValue": true,
+                "offValue": false
+            },
+            {
+                "type": "temperatureandhumidity",
+                "name": "MiJia temperature & humidity sensor",
+                "model": "WSDCGQ01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/WSDCGQ01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/WSDCGQ01LM.html#pairing"
+            },
+            {
+                "type": "programmableswitch",
+                "name": "MiJia wireless switch",
+                "model": "WXKG01LM",
+                "image": "https://www.zigbee2mqtt.io/images/devices/WXKG01LM.jpg",
+                "documentation": "https://www.zigbee2mqtt.io/devices/WXKG01LM.html#pairing",
+                "switch_values": [
+                    {
+                        "orchestra_key": "single",
+                        "zigbee_key": "single"
+                    },
+                    {
+                        "orchestra_key": "double",
+                        "zigbee_key": "double"
+                    },
+                    {
+                        "orchestra_key": "long",
+                        "zigbee_key": "hold"
+                    }
+                ]
+            }
+        ]
+    }
+]
