@@ -140,7 +140,7 @@ router.get('/verify', async (req, res, next) => {
                     await col.deleteOne(
                         { _id: ObjectId(req.query.id) }
                     );
-                    res.status(401).send({ error: 'Le lien a expiré ! Merci de vous réinscrire !' });
+                    res.render('verify', { title: 'Verify', validate: 'Le lien a expiré ! Merci de vous réinscrire !', status: false});
                 } else {
                     await col.updateOne(
                         { _id: ObjectId(data._id) },
@@ -150,15 +150,11 @@ router.get('/verify', async (req, res, next) => {
                             }
                         }
                     );
-                    res.status(200).send({
-                        error: null
-                    })
+                    res.render('verify', { title: 'Verify', validate: 'Votre compte a été validé', status: true});
                 }
             });
         } else {
-            res.status(401).send({
-                error: 'Aucun token d\'authentification n\'a été fourni'
-            });
+            res.render('verify', { title: 'Verify', validate: 'Aucun token d\'authentification n\'a été fourni', status: false});
         }
     } catch (error) {
         res.status(500).send({
