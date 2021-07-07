@@ -3,8 +3,6 @@ var router = express.Router();
 const validator = require('validator');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
-const myPlaintextPassword = 's0/\/\P4$$w0rD';
-const someOtherPlaintextPassword = 'not_bacon';
 const {
     client,
     JWT_KEY,
@@ -17,13 +15,13 @@ const {
 const { verifyHeaders } = require('../middleware/token_verification');
 
 /* RÉCUPERATION DE TOUT LES USERS */
-router.get('/all', async function (req, res, next) {
+router.get('/all', verifyHeaders, async function (req, res, next) {
 
     try {
         await connectMongoClient();
         const col = client.db("orchestra").collection('user');
     
-        let results = await col.find({}).toArray()//project({ password: 0 }).toArray();
+        let results = await col.find({}).project({ password: 0 }).toArray();
         
         res.send({
             results,
@@ -104,7 +102,6 @@ router.post('/login', async (req, res, next) => {
         const col = client.db("orchestra").collection("user");
 
         var result = await col.find({ email: req.body.email, is_verified: true }).toArray();
-        console.log(bcrypt.compareSync(req.body.password, result[0].password));
         if (result.length && result.length !== 0 && bcrypt.compareSync(req.body.password, result[0].password)) {
             jwt.sign({
                 _id: result[0]._id,
